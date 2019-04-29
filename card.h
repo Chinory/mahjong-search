@@ -72,8 +72,8 @@ public:
 
     void entry();
 
-    inline auto begin() { return ckbegin; }
-    inline auto end() { return ckend; }
+    inline auto begin() const { return ckbegin; }
+    inline auto end() const { return ckend; }
 
     template <card_size_t CKSIZE>
     class Fixed
