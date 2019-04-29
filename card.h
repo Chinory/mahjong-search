@@ -53,8 +53,8 @@ class JHSearch
 public:
     typedef std::function<bool(const JHSearch&)> callback_t;
     card_vector_t vec;
-    card_size_t gui;
     card_t jiang;
+    card_size_t gui;
     callback_t callback;
     card_t *ckend;
     card_t ckbegin[];
@@ -80,8 +80,8 @@ public:
     {
     public:
         card_vector_t vec;
-        card_size_t gui;
         card_t jiang;
+        card_size_t gui;
         callback_t callback;
         card_t *ckend;
         card_t ckbegin[CKSIZE];
