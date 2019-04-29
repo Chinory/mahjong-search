@@ -225,7 +225,7 @@ public:
         } else {
             vec[i + 1] += 1;
             gui -= 1;
-            ckend[-3] = card_gui(ckend[-2]);
+            ckend[-3] = card_gui(ckend[-3]);
         }
     }
     
