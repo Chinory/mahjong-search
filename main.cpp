@@ -5,11 +5,6 @@
 
 using namespace std;
 
-void func(card_vector_t& ck)
-{
-    ck[0] = 21;
-}
-
 int main (int argc, char *argv[])
 {
     card_vector_t vec = {0};
@@ -64,7 +59,7 @@ int main (int argc, char *argv[])
         cout << endl;
         return false;
     };
-
+    cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
     searchJH(vec, gui, jiang, callback);
     return 0;
 }
