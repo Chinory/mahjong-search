@@ -86,7 +86,7 @@ bool JHSearch::shunx (card_index_t i)
             shun_drop_fine(i);
         }
         if (j) {
-            shun_turn_fix(c, i, j);
+            shun_turn_fix(i, j);
             if (kanx(i)) {
                 shun_drop_fix(i, j);
                 return true;

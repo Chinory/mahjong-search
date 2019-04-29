@@ -217,15 +217,15 @@ public:
         vec[i + j] += 1;
         gui += 1;
     }
-    inline void shun_turn_fix(const card_t c, const card_index_t i, const card_index_t j) {
+    inline void shun_turn_fix(const card_index_t i, const card_index_t j) {
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;
-            ckend[-2] = card_gui(card_next(card_next(c)));
+            ckend[-2] = card_gui(ckend[-2]);
         } else {
             vec[i + 1] += 1;
             gui -= 1;
-            ckend[-3] = card_gui(card_next(c));
+            ckend[-3] = card_gui(ckend[-2]);
         }
     }
     
