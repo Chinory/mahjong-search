@@ -26,9 +26,7 @@ void JHSearch::entry ()
     if (jiang == NOCARD) {
         shunx(0);
     } else {
-        *ckend++ = jiang;
-        *ckend++ = jiang;
-        *ckend++ = NOCARD;
+        ck_push_jiang_fine(jiang);
         shunx(0);
         ckend -= 3;
     }
@@ -42,9 +40,9 @@ bool JHSearch::shunx (card_index_t i)
         } else if (kanx(i)) {
             return true;
         } else if (gui > 0 && vec[i] > 0 && vec[i + 1] > 0) {
-            use_shun_fix_front(itoc(i), i);
+            shun_use_fix_front(itoc(i), i);
             bool ok = kanx(i);
-            drop_shun_fix(i, 1);
+            shun_drop_fix(i, 1);
             return ok;
         } else {
             return false;
@@ -61,36 +59,36 @@ bool JHSearch::shunx (card_index_t i)
         : vec[i + 2] > fine ? 2 : 0 : 0;
     card_t c = itoc(i);
     if (fine > 0) {
-        use_shun_fine(c, i);
+        shun_use_fine(c, i);
         if (kanx(i)) {
-            drop_shun_fine(i);
+            shun_drop_fine(i);
             return true;
         }
         if (fine > 1) {
-            use_shun_fine(c, i);
+            shun_use_fine(c, i);
             if (kanx(i)) {
-                drop_shun_fine_fine(i);
+                shun_drop_fine_fine(i);
                 return true;
             }
-            drop_shun_fine(i);
+            shun_drop_fine(i);
         }
         if (j) {
-            turn_shun_fix(c, i, j);
+            shun_turn_fix(c, i, j);
             if (kanx(i)) {
-                drop_shun_fix(i, j);
+                shun_drop_fix(i, j);
                 return true;
             }
-            drop_shun_fix(i, j);
+            shun_drop_fix(i, j);
         } else {
-            drop_shun_fine(i);
+            shun_drop_fine(i);
         }
     } else if (j) {
-        use_shun_fix(c, i, j);
+        shun_use_fix(c, i, j);
         if (kanx(i)) {
-            drop_shun_fix(i, j);
+            shun_drop_fix(i, j);
             return true;
         }
-        drop_shun_fix(i, j);
+        shun_drop_fix(i, j);
     }
     return false;
 }
@@ -103,73 +101,60 @@ bool JHSearch::kanx (card_index_t i)
         else if (1 << i & 0x3fdfeff) return shunx(i);
         else break;
     }
+    card_count_t rest = vec[i];
+    card_count_t fine = 0;
     card_t c = itoc(i);
-    card_size_t count;
-    for (count = vec[i]; count > 2; count -= 3) { // fine kezi
-        *ckend++ = c;
-        *ckend++ = c;
-        *ckend++ = c;
-        *ckend++ = NOCARD;
+    while (rest > 2) {
+        rest -= 3;
+        fine += 1;
+        ck_push_kezi_fine(c);
     }
     bool ok;
-    switch (count){
-        case 1: {
-            if (gui < 1) {
-                ok = false;
-            } else if (jiang == NOCARD) { // fix jiang
-                gui -= 1;
-                jiang = c;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-                ckend -= 3;
-                jiang = NOCARD;
-                gui += 1;
-            } else if (gui > 1) { // fix fix kezi
-                gui -= 2;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-                ckend -= 4;
-                gui += 2;
-            } else {
-                ok = false;
-            }
-            break;
-        }
-        case 2: {
-            if (jiang == NOCARD) { // fine jiang
-                jiang = c;
-                *ckend++ = c;
-                *ckend++ = c;
-                *ckend++ = NOCARD;
-                ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-                ckend -= 3;
-                jiang = NOCARD;
-            } else if (gui > 0) { // fix kezi
-                gui -= 1;
-                *ckend++ = c;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-                ckend -= 4;
-                gui += 1;
-            } else {
-                ok = false;
-            }
-            break;
-        }
-        default: {
+    switch (rest) {
+    case 1: {
+        if (gui < 1) {
+            ok = false;
+        } else if (jiang == NOCARD) {
+            gui -= 1;
+            jiang = c;
+            ck_push_jiang_fix(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
+            ckend -= 3;
+            jiang = NOCARD;
+            gui += 1;
+        } else if (gui > 1) {
+            gui -= 2;
+            ck_push_kezi_fix2(c);
+            ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
+            ckend -= 4;
+            gui += 2;
+        } else {
+            ok = false;
         }
+        break;
     }
-    for (count = vec[i]; count > 2; count -= 3) {
-        ckend -= 4;
+    case 2: {
+        if (jiang == NOCARD) { // fine jiang
+            jiang = c;
+            ck_push_jiang_fine(c);
+            ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
+            ckend -= 3;
+            jiang = NOCARD;
+        } else if (gui > 0) { // fix kezi
+            gui -= 1;
+            ck_push_kezi_fix1(c);
+            ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
+            ckend -= 4;
+            gui += 1;
+        } else {
+            ok = false;
+        }
+        break;
     }
+    default:
+        ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
+    }
+    ckend -= fine * 4;
     return ok;
 }
 
@@ -180,88 +165,73 @@ bool JHSearch::zix (card_index_t i)
         else if (vec[i] < 1) ++i;
         else break;
     }
+    card_count_t rest = vec[i];
+    card_count_t fine = 0;
     card_t c = itoc(i);
-    card_size_t count;
-    for (count = vec[i]; count > 2; count -= 3) { // fine kezi
-        *ckend++ = c;
-        *ckend++ = c;
-        *ckend++ = c;
-        *ckend++ = NOCARD;
+    while (rest > 2) {
+        rest -= 3;
+        fine += 1;
+        ck_push_kezi_fine(c);
     }
     bool ok;
-    switch (count){
-        case 1: {
-            if (gui < 1) {
-                ok = false;
-            } else if (jiang == NOCARD) { // fix jiang
-                gui -= 1;
-                jiang = c;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = i < 33 ? zix(i + 1) : hux();
-                ckend -= 3;
-                jiang = NOCARD;
-                gui += 1;
-            } else if (gui > 1) { // fix fix kezi
-                gui -= 2;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = i < 33 ? zix(i + 1) : hux();
-                ckend -= 4;
-                gui += 2;
-            } else {
-                ok = false;
-            }
-            break;
-        }
-        case 2: {
-            if (jiang == NOCARD) { // fine jiang
-                jiang = c;
-                *ckend++ = c;
-                *ckend++ = c;
-                *ckend++ = NOCARD;
-                ok = i < 33 ? zix(i + 1) : hux();
-                ckend -= 3;
-                jiang = NOCARD;
-            } else if (gui > 0) { // fix kezi
-                gui -= 1;
-                *ckend++ = c;
-                *ckend++ = c;
-                *ckend++ = card_gui(c);
-                *ckend++ = NOCARD;
-                ok = i < 33 ? zix(i + 1) : hux();
-                ckend -= 4;
-                gui += 1;
-            } else {
-                ok = false;
-            }
-            break;
-        }
-        default: {
+    switch (rest) {
+    case 1: {
+        if (gui < 1) {
+            ok = false;
+        } else if (jiang == NOCARD) {
+            gui -= 1;
+            jiang = c;
+            ck_push_jiang_fix(c);
             ok = i < 33 ? zix(i + 1) : hux();
+            ckend -= 3;
+            jiang = NOCARD;
+            gui += 1;
+        } else if (gui > 1) {
+            gui -= 2;
+            ck_push_kezi_fix2(c);
+            ok = i < 33 ? zix(i + 1) : hux();
+            ckend -= 4;
+            gui += 2;
+        } else {
+            ok = false;
         }
+        break;
     }
-    for (count = vec[i]; count > 2; count -= 3) {
-        ckend -= 4;
+    case 2: {
+        if (jiang == NOCARD) {
+            jiang = c;
+            ck_push_jiang_fine(c);
+            ok = i < 33 ? zix(i + 1) : hux();
+            ckend -= 3;
+            jiang = NOCARD;
+        } else if (gui > 0) {
+            gui -= 1;
+            ck_push_kezi_fix1(c);
+            ok = i < 33 ? zix(i + 1) : hux();
+            ckend -= 4;
+            gui += 1;
+        } else {
+            ok = false;
+        }
+        break;
     }
+    default:
+        ok = i < 33 ? zix(i + 1) : hux();
+    }
+    ckend -= fine * 4;
     return ok;
 }
 
 bool JHSearch::hux ()
 {
     if (jiang != NOCARD) {
-        *ckend = NOCARD;
+        ckend[0] = NOCARD;
         return callback(*this);
     } else if (gui > 1) {
         gui -= 2;
         jiang = ANYGUI;
-        *ckend++ = ANYGUI;
-        *ckend++ = ANYGUI;
-        *ckend++ = NOCARD;
-        *ckend = NOCARD;
+        ck_push_jiang_fine(ANYGUI);
+        ckend[0] = NOCARD;
         bool ok = callback(*this);
         ckend -= 3;
         jiang = NOCARD;
