@@ -6,18 +6,31 @@ void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSear
 {
     card_size_t count = std::accumulate(_vec.begin(), _vec.end(), 0);
     if (count < 15) {
-        std::cout << "JHSearch::Fixed<cksizeof(14)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(14)>) << std::endl;
+        // std::cout << "JHSearch::Fixed<cksizeof(14)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(14)>) << std::endl;
         JHSearch::Fixed<cksizeof(14)> hu(_vec, _gui, _jiang, _callback);
         hu.entry();
     } else if (count < 21) {
-        std::cout << "JHSearch::Fixed<cksizeof(20)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(20)>) << std::endl;
+        // std::cout << "JHSearch::Fixed<cksizeof(20)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(20)>) << std::endl;
         JHSearch::Fixed<cksizeof(20)> hu(_vec, _gui, _jiang, _callback);
         hu.entry();
     } else {
-        std::cout << "JHSearch new(cksizeof(" << count << "))" << " count: " << count << ", size: " << sizeof(JHSearch) + cksizeof(count) << std::endl;
+        // std::cout << "JHSearch new(cksizeof(" << count << "))" << " count: " << count << ", size: " << sizeof(JHSearch) + cksizeof(count) << std::endl;
         JHSearch* hu = new(cksizeof(count)) JHSearch(_vec, _gui, _jiang, _callback);
         hu->entry();
         delete hu;
+    }
+}
+
+void JHSearch::ckpipe(std::ostream& os) const
+{
+    auto i = ckbegin;
+    os << '[' << (int)*i;
+    for (++i; *i; ++i) os << ',' << (int)*i;
+    os << ']';
+    for (++i; *i; ++i) { os << ',';
+        os << '[' << (int)*i;
+        for (++i; *i; ++i) os << ',' << (int)*i;
+        os << ']';
     }
 }
 
@@ -134,13 +147,13 @@ bool JHSearch::kanx (card_index_t i)
         break;
     }
     case 2: {
-        if (jiang == NOCARD) { // fine jiang
+        if (jiang == NOCARD) {
             jiang = c;
             ck_push_jiang_fine(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
             ckend -= 3;
             jiang = NOCARD;
-        } else if (gui > 0) { // fix kezi
+        } else if (gui > 0) {
             gui -= 1;
             ck_push_kezi_fix1(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);

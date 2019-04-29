@@ -83,10 +83,7 @@ public:
 
     void entry();
 
-    inline auto begin() { return ckbegin; }
-    inline auto end() { return ckend; }
-    inline auto begin() const { return ckbegin; }
-    inline auto end() const { return ckend; }
+    void ckpipe(std::ostream& os) const;
 
     inline void ck_push_shun_fine(const card_t c) {
         ckend[0] = c;

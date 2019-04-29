@@ -49,17 +49,11 @@ int main (int argc, char *argv[])
     card_t jiang = num;
 
     auto callback = [](const JHSearch& hu)->bool{
-        bool d = false;
-        for (auto i = hu.begin(); *i; ++i) {
-            if (d) cout << ','; else d = true;
-            cout << '[' << (int)*i;
-            for (++i; *i; ++i) cout << ',' << (int)*i;
-            cout << ']';
-        }
+        hu.ckpipe(cout);
         cout << endl;
         return false;
     };
-    cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
+    // cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
     searchJH(vec, gui, jiang, callback);
     return 0;
 }
