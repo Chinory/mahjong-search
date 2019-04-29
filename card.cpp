@@ -5,13 +5,16 @@
 void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSearch::callback_t _callback)
 {
     card_size_t count = std::accumulate(_vec.begin(), _vec.end(), 0);
-    if (count <= cksizeof(14)) {
+    if (count < 15) {
+        std::cout << "JHSearch::Fixed<cksizeof(14)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(14)>) << std::endl;
         JHSearch::Fixed<cksizeof(14)> hu(_vec, _gui, _jiang, _callback);
         hu.entry();
-    } else if (count <= cksizeof(20)) {
+    } else if (count < 21) {
+        std::cout << "JHSearch::Fixed<cksizeof(20)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(20)>) << std::endl;
         JHSearch::Fixed<cksizeof(20)> hu(_vec, _gui, _jiang, _callback);
         hu.entry();
     } else {
+        std::cout << "JHSearch new(cksizeof(" << count << "))" << " count: " << count << ", size: " << sizeof(JHSearch) + cksizeof(count) << std::endl;
         JHSearch* hu = new(cksizeof(count)) JHSearch(_vec, _gui, _jiang, _callback);
         hu->entry();
         delete hu;
