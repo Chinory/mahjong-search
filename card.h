@@ -107,16 +107,22 @@ public:
         *ckend++ = card_next(card_next(c));
         *ckend++ = NOCARD;
     }
-    inline void ck_push_shun_fix(const card_t c, const card_index_t j) {
-        *ckend++ = c;
-        *ckend++ = j & 1 ? card_next(c) : card_gui(card_next(c));
-        *ckend++ = j & 1 ? card_gui(card_next(card_next(c))) : card_next(card_next(c));
-        *ckend++ = NOCARD;
-    }
     inline void ck_push_shun_fix_front(const card_t c) {
         *ckend++ = card_gui(card_prev(c));
         *ckend++ = c;
         *ckend++ = card_next(c);
+        *ckend++ = NOCARD;
+    }
+    inline void ck_push_shun_fix_middle(const card_t c) {
+        *ckend++ = c;
+        *ckend++ = card_gui(card_next(c));
+        *ckend++ = card_next(card_next(c));
+        *ckend++ = NOCARD;
+    }
+    inline void ck_push_shun_fix_back(const card_t c) {
+        *ckend++ = c;
+        *ckend++ = card_next(c);
+        *ckend++ = card_gui(card_next(card_next(c)));
         *ckend++ = NOCARD;
     }
     inline void use_shun_fine(const card_t c, const card_index_t i) {
@@ -125,7 +131,8 @@ public:
     }
     inline void use_shun_fix(const card_t c, const card_index_t i, const card_index_t j) {
         --vec[i]; --vec[i + j]; --gui;
-        ck_push_shun_fix(c, j);
+        if (j & 1) ck_push_shun_fix_back(c);
+        else ck_push_shun_fix_middle(c);
     }
     inline void use_shun_fix_front(const card_t c, const card_index_t i) {
         --vec[i]; --vec[i + 1]; --gui;
@@ -146,7 +153,8 @@ public:
     inline void turn_shun_fix(const card_t c, const card_index_t i, const card_index_t j) {
         ++vec[i + (j ^ 3)]; --gui;
         ckend -= 4;
-        ck_push_shun_fix(c, j);
+        if (j & 1) ck_push_shun_fix_back(c);
+        else ck_push_shun_fix_middle(c);
     }
 };
 
