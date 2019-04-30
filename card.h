@@ -93,12 +93,8 @@ public:
 
         Alloc(const card_vector_t& _vec, uint16_t _gui = 0, card_t _jiang = NOCARD)
         : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
-        
-        inline bool search (callback_t* _callback) { return ((JHSearch*)this)->search(_callback); }
 
-        operator JHSearch& () {
-            return *(JHSearch*)this;
-        }
+        operator JHSearch& () { return *(JHSearch*)this; }
     };
 
     JHSearch(uint16_t _gui = 0, card_t _jiang = NOCARD)
