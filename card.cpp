@@ -68,29 +68,29 @@ bool JHSearch::zixj()
         for (; rest > 2; rest -= 3)
             ckpush_kezi_fine(c);
         switch (rest) {
-            case 0: continue;
-            case 1: {
-                if (gui < 1) break;
-                if (jiang1 == NOCARD) {
-                    gui -= 1;
-                    jiang1 = c; jiang2 = card_gui(c);
-                    continue;
-                } else if (gui > 1) {
-                    gui -= 2;
-                    ckpush_kezi_fix2(c);
-                    continue;
-                } else break;
-            }
-            case 2: {
-                if (jiang1 == NOCARD) {
-                    jiang1 = c; jiang2 = c;
-                    continue;
-                } else if (gui > 0) {
-                    gui -= 1;
-                    ckpush_kezi_fix1(c);
-                    continue;
-                } else break;
-            }
+        case 0: continue;
+        case 1:
+            if (gui < 1) break; else
+            if (jiang1 == NOCARD) {
+                gui -= 1;
+                jiang1 = c;
+                jiang2 = card_gui(c);
+                continue;
+            } else if (gui > 1) {
+                gui -= 2;
+                ckpush_kezi_fix2(c);
+                continue;
+            } else break;
+        case 2:
+            if (jiang1 == NOCARD) {
+                jiang1 = c;
+                jiang2 = c;
+                continue;
+            } else if (gui > 0) {
+                gui -= 1;
+                ckpush_kezi_fix1(c);
+                continue;
+            } else break;
         }
         jiang1 = NOCARD;
         jiang2 = NOCARD;
