@@ -220,11 +220,11 @@ public:
     }
     
 protected:
-    bool zixj ();
-    bool zixnj ();
-    bool shunx (card_index_t i);
-    bool kanx (card_index_t i);
-    bool hux ();
+    bool search_zi_getjiang ();
+    bool search_zi_nojiang ();
+    bool search_shun (card_index_t i);
+    bool search_kezi (card_index_t i);
+    bool search_summary ();
 };
 
 
