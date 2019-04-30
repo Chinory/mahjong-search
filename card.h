@@ -3,9 +3,6 @@
 
 #include <array>
 #include <vector>
-#include <string>
-#include <cstddef>
-#include <cstring>
 #include <functional>
 
 typedef int8_t    card_t;
@@ -19,51 +16,87 @@ typedef std::array<card_count_t, 34> card_vector_t;
 #define card_next(c) ((c)+1)
 #define card_prev(c) ((c)-1)
 #define card_gui(c) (-(c))
-#define cksizeof(n) ((n)<<2)
 
 #define CARD_DEC
+
+#ifdef CARD_DEC
+inline card_index_t ctoi (const card_t card)
+{
+    if (card < 11) return static_cast<card_index_t>(-1);
+    else if (card < 20) return static_cast<card_index_t>(card) - (11 - 0);
+    else if (card < 30) return static_cast<card_index_t>(card) - (21 - 9);
+    else if (card < 40) return static_cast<card_index_t>(card) - (31 - 18);
+    else if (card < 48) return static_cast<card_index_t>(card) - (41 - 27);
+    else return static_cast<card_index_t>(-1);
+}
+inline card_t itoc (const card_index_t index)
+{
+    if (index < 18) {
+        if (index < 9) {
+            return static_cast<card_t>(index + (11 - 0));
+        } else {
+            return static_cast<card_t>(index + (21 - 9));
+        }
+    } else if (index < 27) {
+        return static_cast<card_t>(index + (31 - 18));
+    } else if (index < 34) {
+        return static_cast<card_t>(index + (41 - 27));
+    } else {
+        return NOCARD;
+    }
+}
+#endif // CARD_DEC
 
 #ifdef CARD_HEX
 inline card_index_t ctoi (const card_t card)
 {
-    auto color = card >> 4;
-    auto point = card & 0x0F;
-    if (point < 1) return -1;
-    else if (color == 1) return point < 10 ? point - 1 : -1;
-    else if (color == 2) return point < 10 ? point + 8 : -1;
-    else if (color == 3) return point < 10 ? point + 17 : -1;
-    else if (color == 4) return point < 8 ? point + 26 : -1;
-    else return -1;
+    card_index_t point = card & 15;
+    if (point) {
+        switch (card >> 4) {
+            case 1: return point < 10 ? point - 1 : static_cast<card_index_t>(-1);
+            case 2: return point < 10 ? point + 8 : static_cast<card_index_t>(-1);
+            case 3: return point < 10 ? point + 17 : static_cast<card_index_t>(-1);
+            case 4: return point < 8 ? point + 26 : static_cast<card_index_t>(-1);
+        }
+    }
+    return CARD_INDEX_INVAILD;
 }
 inline card_t itoc (const card_index_t index)
 {
-    if (index < 0) return 0;
-    else if (index < 9) return 0x10 | (index + 1);
-    else if (index < 18) return 0x20 | (index - 8);
-    else if (index < 27) return 0x30 | (index - 17);
-    else if (index < 34) return 0x40 | (index - 26);
-    else return 0;
+    if (index < 18) {
+        if (index < 9) {
+            return static_cast<card_t>(index + 1) | 0x10;
+        } else {
+            return static_cast<card_t>(index - 8) | 0x20;
+        }
+    } else if (index < 27) {
+        return static_cast<card_t>(index - 17) | 0x30;
+    } else if (index < 34) {
+        return static_cast<card_t>(index - 26) | 0x40;
+    } else {
+        return NOCARD;
+    }
 }
 #endif // CARD_HEX
-#ifdef CARD_DEC
+
+#ifdef CARD_CONTI
 inline card_index_t ctoi (const card_t card)
 {
-    if (card < 11) return -1;
-    else if (card < 20) return card - (11 - 0);
-    else if (card < 30) return card - (21 - 9);
-    else if (card < 40) return card - (31 - 18);
-    else if (card < 48) return card - (41 - 27);
-    else return -1;
+    if (card > 0 && card < 36) {
+        return static_cast<card_index_t>(card) - 1;
+    } else {
+        return static_cast<card_index_t>(-1);
+    }
 }
 inline card_t itoc (const card_index_t index)
 {
-    if (index < 9) return index + (11 - 0);
-    else if (index < 18) return index + (21 - 9);
-    else if (index < 27) return index + (31 - 18);
-    else if (index < 34) return index + (41 - 27);
-    else return NOCARD;
+    if (index < 34) {
+        return static_cast<card_t>(index + 1);
+    } else {
+        return NOCARD;
+    }
 }
-#endif
+#endif // CARD_CONTI
 
 class JHSearch
 {
@@ -76,7 +109,7 @@ public:
     card_size_t cksize;
     callback_t *callback;
     card_t ckdata[];
-    
+
     template <card_size_t MAXCARD>
     class Alloc
     {

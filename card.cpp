@@ -1,22 +1,21 @@
 #include "card.h"
 #include <iostream>
-#include <numeric>
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
     auto ckend = ckdata + cksize;
     for (auto i = ckdata; i < ckend; i += 3) {
-        os << '[' << (int)i[0] << ',' << (int)i[1] << ',' << (int)i[2] << ']' << ',';
+        os << '[' << static_cast<int>(i[0]) << ',' << static_cast<int>(i[1]) << ',' << static_cast<int>(i[2]) << ']' << ',';
     }
-    os << '[' << (int)jiang1 << ',' << (int)jiang2 << ']';
+    os << '[' << static_cast<int>(jiang1) << ',' << static_cast<int>(jiang2) << ']';
 }
 
 void JHSearch::vecpipe(std::ostream& os) const
 {
     auto i = vec.begin();
-    os << '[' << (int)*i;
+    os << '[' << static_cast<int>(*i);
     for (++i; i != vec.end(); ++i) {
-        os << ',' << (int)*i;
+        os << ',' << static_cast<int>(*i);
     }
     os << ']';
 }
@@ -50,7 +49,7 @@ bool JHSearch::search_zi_nojiang()
                 gui -= 2;
                 ckpush_kezi_fix2(c);
                 continue;
-            } else break;                
+            } else break;
         case 2:
             if (gui > 0) {
                 gui -= 1;
@@ -107,7 +106,7 @@ bool JHSearch::search_zi_getjiang()
         jiang2 = NOCARD;
         gui = guiall;
         cksize = 0;
-        return true; 
+        return true;
     }
     bool ok;
     if (jiang1 != NOCARD) {
@@ -115,7 +114,7 @@ bool JHSearch::search_zi_getjiang()
     } else if (gui > 1) {
         gui -= 2;
         jiang1 = ANYGUI;
-        jiang2 = ANYGUI; 
+        jiang2 = ANYGUI;
         ok = search_shun(0);
     } else {
         search_shun(0);

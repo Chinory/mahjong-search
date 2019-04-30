@@ -1,6 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <climits>
 #include "card.h"
 
 using namespace std;
@@ -53,6 +52,7 @@ int main (int argc, char *argv[])
             string line;
             cin >> line;
             if (line.length() == 0) break;
+
             guiCount = stoi(line);
             jh.gui = guiCount;
         }
@@ -62,8 +62,8 @@ int main (int argc, char *argv[])
             cin >> line;
             if (line.length() == 0) break;
             int jiang = stoi(line);
-            jh.jiang1 = (card_t)jiang;
-            jh.jiang2 = (card_t)jiang;
+            jh.jiang1 = static_cast<card_t>(jiang);
+            jh.jiang2 = static_cast<card_t>(jiang);
         }
         jh.search(&callback);
         if (argc > 3) {
