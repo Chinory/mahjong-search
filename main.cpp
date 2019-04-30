@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
         return false;
     };
     // cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
-    JHSearch::Alloc<64> _hu(vec, gui, jiang);
+    JHSearch::Alloc<256> _hu(vec, gui, jiang);
     JHSearch& hu = _hu;
     hu.search(&callback);
     return 0;
