@@ -23,6 +23,7 @@ void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSear
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
+    auto ckend = ckbegin + length;
     for (auto i = ckbegin; i < ckend; i += 3) {
         os << '[' << (int)i[0] << ',' << (int)i[1] << ',' << (int)i[2] << ']' << ',';
     }
@@ -124,7 +125,7 @@ bool JHSearch::kanx (card_index_t i)
             gui -= 2;
             ckpush_kezi_fix2(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 3;
+            length -= 3;
             gui += 2;
         } else {
             ok = false;
@@ -140,7 +141,7 @@ bool JHSearch::kanx (card_index_t i)
             gui -= 1;
             ckpush_kezi_fix1(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 3;
+            length -= 3;
             gui += 1;
         } else {
             ok = false;
@@ -150,7 +151,7 @@ bool JHSearch::kanx (card_index_t i)
     default:
         ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
     }
-    ckend -= (vec[i] - rest);
+    length -= (vec[i] - rest);
     return ok;
 }
 
@@ -182,7 +183,7 @@ bool JHSearch::zix (card_index_t i)
             gui -= 2;
             ckpush_kezi_fix2(c);
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 3;
+            length -= 3;
             gui += 2;
         } else {
             ok = false;
@@ -198,7 +199,7 @@ bool JHSearch::zix (card_index_t i)
             gui -= 1;
             ckpush_kezi_fix1(c);
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 3;
+            length -= 3;
             gui += 1;
         } else {
             ok = false;
@@ -208,7 +209,7 @@ bool JHSearch::zix (card_index_t i)
     default:
         ok = i < 33 ? zix(i + 1) : hux();
     }
-    ckend -= (vec[i] - rest);
+    length -= (vec[i] - rest);
     return ok;
 }
 
