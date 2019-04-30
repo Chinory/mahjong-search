@@ -76,7 +76,7 @@ public:
     callback_t *callback;
     card_t ckdata[];
     
-    template <card_size_t CKSIZE_MAX>
+    template <card_size_t MAXCARD>
     class Alloc
     {
     public:
@@ -86,7 +86,7 @@ public:
         card_size_t gui;
         card_size_t cksize;
         callback_t *callback;
-        card_t ckdata[CKSIZE_MAX];
+        card_t ckdata[MAXCARD];
 
         Alloc(card_size_t _gui = 0, card_t _jiang = NOCARD)
         : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
@@ -103,8 +103,8 @@ public:
     JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
     : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
     
-    void* operator new(size_t size, card_size_t cksize_max) {
-        return ::operator new(size + sizeof(card_t[cksize_max]));
+    void* operator new(size_t size, card_size_t maxcard) {
+        return ::operator new(size + sizeof(card_t[maxcard]));
     }
     void operator delete(void* pointee) {
         ::operator delete(pointee);
