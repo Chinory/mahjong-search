@@ -111,6 +111,7 @@ public:
     }
     
     void ckpipe(std::ostream& os) const;
+    void vecpipe(std::ostream& os) const;
 
     bool search(callback_t* _callback);
     

@@ -5,15 +5,19 @@
 
 using namespace std;
 
+#define MAXCARD 256
 
 int main (int argc, char *argv[])
 {
-    card_vector_t vec = {0};
+    JHSearch::Alloc<MAXCARD> _searchData;
+    JHSearch& jh = _searchData;
+
+
     if (argc > 1) {
         istringstream iss(argv[1]);
         for (string card; getline(iss, card, ',');) {
             auto i = ctoi(stoi(card));
-            if (~i) ++vec[i];
+            if (~i) ++jh.vec[i];
         }
     } else {
         cerr << "(1/3) cards: ";
@@ -22,42 +26,36 @@ int main (int argc, char *argv[])
         istringstream iss(line);
         for (string card; getline(iss, card, ',');) {
             auto i = ctoi(stoi(card));
-            if (~i) ++vec[i];
+            if (~i) ++jh.vec[i];
         }
-        auto i = vec.begin();
-        cerr << "[" << (int)*i;
-        for (++i; i != vec.end(); ++i) {
-            cerr << ',' << (int)*i;
-        }
-        cerr << ']' << endl;
+        jh.vecpipe(cout);
+        cout << endl;
     }
 
-    int num;
     if (argc > 2) {
-        num = stoi(argv[2]);
+        jh.gui = stoi(argv[2]);
     } else {
         cerr << "(2/3) guiCount: ";
-        cin >> num;
+        cin >> jh.gui;
     }
-    card_count_t gui = num;
 
+    int jiang;
     if (argc > 3) {
-        num = stoi(argv[3]);
+        jiang = stoi(argv[3]);
     } else {
         cerr << "(3/3) jiang: ";
-        cin >> num;
+        cin >> jiang;
     }
-    card_t jiang = num;
+    jh.jiang1 = (card_t)jiang;
+    jh.jiang2 = (card_t)jiang;
 
     JHSearch::callback_t callback = [](const JHSearch& hu)->bool{
         hu.ckpipe(cout);
         cout << endl;
         return false;
     };
-    // cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
-    JHSearch::Alloc<256> _hu(vec, gui, jiang);
-    JHSearch& hu = _hu;
-    hu.search(&callback);
+
+    ((JHSearch&)jh).search(&callback);
     return 0;
 }
 

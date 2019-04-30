@@ -11,6 +11,16 @@ void JHSearch::ckpipe(std::ostream& os) const
     os << '[' << (int)jiang1 << ',' << (int)jiang2 << ']';
 }
 
+void JHSearch::vecpipe(std::ostream& os) const
+{
+    auto i = vec.begin();
+    os << '[' << (int)*i;
+    for (++i; i != vec.end(); ++i) {
+        os << ',' << (int)*i;
+    }
+    os << ']';
+}
+
 bool JHSearch::search (callback_t* _callback)
 {
     if (!callback) {
