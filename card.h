@@ -70,7 +70,8 @@ public:
     typedef std::function<bool(const JHSearch&)> callback_t;
     
     card_vector_t vec;
-    card_t jiang;
+    card_t jiang1;
+    card_t jiang2;
     card_size_t gui;
     callback_t callback;
     card_t *ckend;
@@ -81,26 +82,27 @@ public:
     {
     public:
         card_vector_t vec;
-        card_t jiang;
+        card_t jiang1;
+        card_t jiang2;
         card_size_t gui;
         callback_t callback;
         card_t *ckend;
         card_t ckbegin[CKSIZE];
         
         Fixed(card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec({0}), jiang(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) { ckbegin[0] = NOCARD; };
+        : vec(), jiang1(_jiang), jiang2(_jiang), callback(_callback), ckend(&ckbegin[0]) {};
         
         Fixed(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec(_vec), jiang(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) { ckbegin[0] = NOCARD; };
+        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
         
         inline void entry () { ((JHSearch*)this)->entry(); }
     };
     
     JHSearch(card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec({0}), jiang(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) { ckbegin[0] = NOCARD; };
+    : vec({0}), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
     
     JHSearch(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec(_vec), jiang(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) { ckbegin[0] = NOCARD; };
+    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
     
     void* operator new(size_t size, card_size_t cksize) {
         return ::operator new(size + sizeof(card_t[cksize]));
@@ -161,18 +163,6 @@ public:
         ckend[2] = card_gui(c);
         ckend[3] = NOCARD;
         ckend += 4;
-    }
-    inline void ckpush_jiang_fine(const card_t c) {
-        ckend[0] = c;
-        ckend[1] = c;
-        ckend[2] = NOCARD;
-        ckend += 3;
-    }
-    inline void ckpush_jiang_fix(const card_t c) {
-        ckend[0] = c;
-        ckend[1] = card_gui(c);
-        ckend[2] = NOCARD;
-        ckend += 3;
     }
     inline void shun_use_fine(const card_t c, const card_index_t i) {
         vec[i + 0] -= 1;

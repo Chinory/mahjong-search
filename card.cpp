@@ -23,26 +23,17 @@ void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSear
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
-    auto i = ckbegin;
-    os << '[' << (int)*i;
-    for (++i; *i; ++i) os << ',' << (int)*i;
-    os << ']';
-    for (++i; *i; ++i) { os << ',';
+    for (auto i = ckbegin; *i; ++i) {
         os << '[' << (int)*i;
         for (++i; *i; ++i) os << ',' << (int)*i;
-        os << ']';
+        os << ']' << ',';
     }
+    os << '[' << (int)jiang1 << ',' << (int)jiang2 << ']';
 }
 
 void JHSearch::entry ()
 {
-    if (jiang == NOCARD) {
-        shunx(0);
-    } else {
-        ckpush_jiang_fine(jiang);
-        shunx(0);
-        ckend -= 3;
-    }
+    shunx(0);
 }
 
 bool JHSearch::shunx (card_index_t i)
@@ -127,13 +118,13 @@ bool JHSearch::kanx (card_index_t i)
     case 1: {
         if (gui < 1) {
             ok = false;
-        } else if (jiang == NOCARD) {
+        } else if (jiang1 == NOCARD) {
             gui -= 1;
-            jiang = c;
-            ckpush_jiang_fix(c);
+            jiang1 = c;
+            jiang2 = card_gui(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
             ckend -= 3;
-            jiang = NOCARD;
+            jiang1 = NOCARD;
             gui += 1;
         } else if (gui > 1) {
             gui -= 2;
@@ -147,12 +138,12 @@ bool JHSearch::kanx (card_index_t i)
         break;
     }
     case 2: {
-        if (jiang == NOCARD) {
-            jiang = c;
-            ckpush_jiang_fine(c);
+        if (jiang1 == NOCARD) {
+            jiang1 = c;
+            jiang2 = c;
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
             ckend -= 3;
-            jiang = NOCARD;
+            jiang1 = NOCARD;
         } else if (gui > 0) {
             gui -= 1;
             ckpush_kezi_fix1(c);
@@ -191,13 +182,13 @@ bool JHSearch::zix (card_index_t i)
     case 1: {
         if (gui < 1) {
             ok = false;
-        } else if (jiang == NOCARD) {
+        } else if (jiang1 == NOCARD) {
             gui -= 1;
-            jiang = c;
-            ckpush_jiang_fix(c);
+            jiang1 = c;
+            jiang2 = card_gui(c);
             ok = i < 33 ? zix(i + 1) : hux();
             ckend -= 3;
-            jiang = NOCARD;
+            jiang1 = NOCARD;
             gui += 1;
         } else if (gui > 1) {
             gui -= 2;
@@ -211,12 +202,12 @@ bool JHSearch::zix (card_index_t i)
         break;
     }
     case 2: {
-        if (jiang == NOCARD) {
-            jiang = c;
-            ckpush_jiang_fine(c);
+        if (jiang1 == NOCARD) {
+            jiang1 = c;
+            jiang2 = c;
             ok = i < 33 ? zix(i + 1) : hux();
             ckend -= 3;
-            jiang = NOCARD;
+            jiang1 = NOCARD;
         } else if (gui > 0) {
             gui -= 1;
             ckpush_kezi_fix1(c);
@@ -237,17 +228,16 @@ bool JHSearch::zix (card_index_t i)
 
 bool JHSearch::hux ()
 {
-    if (jiang != NOCARD) {
+    if (jiang1 != NOCARD) {
         ckend[0] = NOCARD;
         return callback(*this);
     } else if (gui > 1) {
         gui -= 2;
-        jiang = ANYGUI;
-        ckpush_jiang_fine(ANYGUI);
+        jiang1 = ANYGUI;
+        jiang2 = ANYGUI;
         ckend[0] = NOCARD;
         bool ok = callback(*this);
-        ckend -= 3;
-        jiang = NOCARD;
+        jiang1 = NOCARD;
         gui += 2;
         return ok;
     } else {
