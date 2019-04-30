@@ -19,8 +19,9 @@ typedef std::array<card_count_t, 34> card_vector_t;
 #define card_next(c) ((c)+1)
 #define card_prev(c) ((c)-1)
 #define card_gui(c) (-(c))
+#define cksizeof(n) ((n)<<2)
 
-#define cksizeof(n) n
+#define CARD_DEC
 
 #ifdef CARD_HEX
 inline card_index_t ctoi (const card_t card)
@@ -43,7 +44,8 @@ inline card_t itoc (const card_index_t index)
     else if (index < 34) return 0x40 | (index - 26);
     else return 0;
 }
-#else
+#endif // CARD_HEX
+#ifdef CARD_DEC
 inline card_index_t ctoi (const card_t card)
 {
     if (card < 11) return -1;
@@ -218,7 +220,7 @@ public:
             ckend[-2] = card_gui(ckend[-2]);
         }
     }
-    
+
 protected:
     bool search_zi_getjiang ();
     bool search_zi_nojiang ();
