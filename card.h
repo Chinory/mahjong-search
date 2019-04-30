@@ -48,10 +48,10 @@ inline card_t itoc (const card_index_t index)
 inline card_index_t ctoi (const card_t card)
 {
     if (card < 11) return -1;
-    else if (card < 20) return card - 11;
-    else if (card < 30) return card - 21;
-    else if (card < 40) return card - 31;
-    else if (card < 48) return card - 41;
+    else if (card < 20) return card - (11 - 0);
+    else if (card < 30) return card - (21 - 9);
+    else if (card < 40) return card - (31 - 18);
+    else if (card < 48) return card - (41 - 27);
     else return -1;
 }
 inline card_t itoc (const card_index_t index)
