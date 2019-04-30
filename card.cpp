@@ -26,7 +26,7 @@ bool JHSearch::search (callback_t* _callback)
 
 bool JHSearch::search_zi_nojiang()
 {
-    auto _gui = gui;
+    auto guiall = gui;
     for (card_index_t i = 27; i < 34; ++i) {
         auto rest = vec[i];
         if (rest < 1) continue;
@@ -48,19 +48,19 @@ bool JHSearch::search_zi_nojiang()
                 continue;
             } else break;
         }
-        gui = _gui;
+        gui = guiall;
         cksize = 0;
         return true;
     }
     bool ok = search_shun(0);
-    gui = _gui;
+    gui = guiall;
     cksize = 0;
     return ok;
 }
 
 bool JHSearch::search_zi_getjiang()
 {
-    auto _gui = gui;
+    auto guiall = gui;
     for (card_index_t i = 27; i < 34; ++i) {
         auto rest = vec[i];
         if (rest < 1) continue;
@@ -94,7 +94,7 @@ bool JHSearch::search_zi_getjiang()
         }
         jiang1 = NOCARD;
         jiang2 = NOCARD;
-        gui = _gui;
+        gui = guiall;
         cksize = 0;
         return true; 
     }
@@ -113,7 +113,7 @@ bool JHSearch::search_zi_getjiang()
     }
     jiang1 = NOCARD;
     jiang2 = NOCARD;
-    gui = _gui;
+    gui = guiall;
     cksize = 0;
     return ok;
 }
