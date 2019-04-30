@@ -23,10 +23,8 @@ void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSear
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
-    for (auto i = ckbegin; *i; ++i) {
-        os << '[' << (int)*i;
-        for (++i; *i; ++i) os << ',' << (int)*i;
-        os << ']' << ',';
+    for (auto i = ckbegin; i < ckend; i += 3) {
+        os << '[' << (int)i[0] << ',' << (int)i[1] << ',' << (int)i[2] << ']' << ',';
     }
     os << '[' << (int)jiang1 << ',' << (int)jiang2 << ']';
 }
@@ -106,11 +104,9 @@ bool JHSearch::kanx (card_index_t i)
         else break;
     }
     card_count_t rest = vec[i];
-    card_count_t fine = 0;
     card_t c = itoc(i);
     while (rest > 2) {
         rest -= 3;
-        fine += 1;
         ckpush_kezi_fine(c);
     }
     bool ok;
@@ -120,17 +116,15 @@ bool JHSearch::kanx (card_index_t i)
             ok = false;
         } else if (jiang1 == NOCARD) {
             gui -= 1;
-            jiang1 = c;
-            jiang2 = card_gui(c);
+            jiang1 = c; jiang2 = card_gui(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 3;
             jiang1 = NOCARD;
             gui += 1;
         } else if (gui > 1) {
             gui -= 2;
             ckpush_kezi_fix2(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 4;
+            ckend -= 3;
             gui += 2;
         } else {
             ok = false;
@@ -139,16 +133,14 @@ bool JHSearch::kanx (card_index_t i)
     }
     case 2: {
         if (jiang1 == NOCARD) {
-            jiang1 = c;
-            jiang2 = c;
+            jiang1 = c; jiang2 = c;
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 3;
             jiang1 = NOCARD;
         } else if (gui > 0) {
             gui -= 1;
             ckpush_kezi_fix1(c);
             ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
-            ckend -= 4;
+            ckend -= 3;
             gui += 1;
         } else {
             ok = false;
@@ -158,7 +150,7 @@ bool JHSearch::kanx (card_index_t i)
     default:
         ok = 1 << i & 0x1fcfe7f ? shunx(i + 1) : kanx(i + 1);
     }
-    ckend -= fine * 4;
+    ckend -= (vec[i] - rest);
     return ok;
 }
 
@@ -170,11 +162,9 @@ bool JHSearch::zix (card_index_t i)
         else break;
     }
     card_count_t rest = vec[i];
-    card_count_t fine = 0;
     card_t c = itoc(i);
     while (rest > 2) {
         rest -= 3;
-        fine += 1;
         ckpush_kezi_fine(c);
     }
     bool ok;
@@ -184,17 +174,15 @@ bool JHSearch::zix (card_index_t i)
             ok = false;
         } else if (jiang1 == NOCARD) {
             gui -= 1;
-            jiang1 = c;
-            jiang2 = card_gui(c);
+            jiang1 = c; jiang2 = card_gui(c);
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 3;
             jiang1 = NOCARD;
             gui += 1;
         } else if (gui > 1) {
             gui -= 2;
             ckpush_kezi_fix2(c);
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 4;
+            ckend -= 3;
             gui += 2;
         } else {
             ok = false;
@@ -203,16 +191,14 @@ bool JHSearch::zix (card_index_t i)
     }
     case 2: {
         if (jiang1 == NOCARD) {
-            jiang1 = c;
-            jiang2 = c;
+            jiang1 = c; jiang2 = c;
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 3;
             jiang1 = NOCARD;
         } else if (gui > 0) {
             gui -= 1;
             ckpush_kezi_fix1(c);
             ok = i < 33 ? zix(i + 1) : hux();
-            ckend -= 4;
+            ckend -= 3;
             gui += 1;
         } else {
             ok = false;
@@ -222,20 +208,17 @@ bool JHSearch::zix (card_index_t i)
     default:
         ok = i < 33 ? zix(i + 1) : hux();
     }
-    ckend -= fine * 4;
+    ckend -= (vec[i] - rest);
     return ok;
 }
 
 bool JHSearch::hux ()
 {
     if (jiang1 != NOCARD) {
-        ckend[0] = NOCARD;
         return callback(*this);
     } else if (gui > 1) {
         gui -= 2;
-        jiang1 = ANYGUI;
-        jiang2 = ANYGUI;
-        ckend[0] = NOCARD;
+        jiang1 = ANYGUI; jiang2 = ANYGUI;
         bool ok = callback(*this);
         jiang1 = NOCARD;
         gui += 2;

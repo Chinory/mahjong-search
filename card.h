@@ -21,7 +21,7 @@ typedef std::array<card_count_t, 34> card_vector_t;
 #define card_prev(c) ((c)-1)
 #define card_gui(c) (-(c))
 
-#define cksizeof(n) ((n)<<2)
+#define cksizeof(n) n
 
 #ifdef CARD_HEX
 inline card_index_t ctoi (const card_t card)
@@ -99,7 +99,7 @@ public:
     };
     
     JHSearch(card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec({0}), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
+    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
     
     JHSearch(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
     : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), callback(_callback), ckend(&ckbegin[0]) {};
@@ -119,50 +119,43 @@ public:
         ckend[0] = c;
         ckend[1] = card_next(c);
         ckend[2] = card_next(card_next(c));
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_shun_fix_front(const card_t c) {
         ckend[0] = card_gui(card_prev(c));
         ckend[1] = c;
         ckend[2] = card_next(c);
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_shun_fix_middle(const card_t c) {
         ckend[0] = c;
         ckend[1] = card_gui(card_next(c));
         ckend[2] = card_next(card_next(c));
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_shun_fix_back(const card_t c) {
         ckend[0] = c;
         ckend[1] = card_next(c);
         ckend[2] = card_gui(card_next(card_next(c)));
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_kezi_fine(const card_t c) {
         ckend[0] = c;
         ckend[1] = c;
         ckend[2] = c;
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_kezi_fix1(const card_t c) {
         ckend[0] = c;
         ckend[1] = c;
         ckend[2] = card_gui(c);
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void ckpush_kezi_fix2(const card_t c) {
         ckend[0] = c;
         ckend[1] = card_gui(c);
         ckend[2] = card_gui(c);
-        ckend[3] = NOCARD;
-        ckend += 4;
+        ckend += 3;
     }
     inline void shun_use_fine(const card_t c, const card_index_t i) {
         vec[i + 0] -= 1;
@@ -190,19 +183,19 @@ public:
         ckpush_shun_fix_front(c);
     }
     inline void shun_drop_fine(const card_index_t i) {
-        ckend -= 4;
+        ckend -= 3;
         vec[i + 0] += 1;
         vec[i + 1] += 1;
         vec[i + 2] += 1;
     }
     inline void shun_drop_fine_fine(const card_index_t i) {
-        ckend -= 8;
+        ckend -= 6;
         vec[i + 0] += 2;
         vec[i + 1] += 2;
         vec[i + 2] += 2;
     }
     inline void shun_drop_fix(const card_index_t i, const card_index_t j) {
-        ckend -= 4;
+        ckend -= 3;
         vec[i + 0] += 1;
         vec[i + j] += 1;
         gui += 1;
@@ -211,11 +204,11 @@ public:
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;
-            ckend[-2] = card_gui(ckend[-2]);
+            ckend[-1] = card_gui(ckend[-1]);
         } else {
             vec[i + 1] += 1;
             gui -= 1;
-            ckend[-3] = card_gui(ckend[-3]);
+            ckend[-2] = card_gui(ckend[-2]);
         }
     }
     
