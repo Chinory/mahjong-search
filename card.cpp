@@ -2,25 +2,6 @@
 #include <iostream>
 #include <numeric>
 
-// void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSearch::callback_t _callback)
-// {
-//     card_size_t count = std::accumulate(_vec.begin(), _vec.end(), 0);
-//     if (count < 15) {
-//         // std::cout << "JHSearch::Fixed<cksizeof(14)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(14)>) << std::endl;
-//         JHSearch::Fixed<cksizeof(14)> hu(_vec, _gui, _jiang, _callback);
-//         hu.search();
-//     } else if (count < 21) {
-//         // std::cout << "JHSearch::Fixed<cksizeof(20)>" << " count: " << count << ", size: " << sizeof(JHSearch::Fixed<cksizeof(20)>) << std::endl;
-//         JHSearch::Fixed<cksizeof(20)> hu(_vec, _gui, _jiang, _callback);
-//         hu.search();
-//     } else {
-//         // std::cout << "JHSearch new(cksizeof(" << count << "))" << " count: " << count << ", size: " << sizeof(JHSearch) + cksizeof(count) << std::endl;
-//         JHSearch* hu = new(cksizeof(count)) JHSearch(_vec, _gui, _jiang, _callback);
-//         hu->search();
-//         delete hu;
-//     }
-// }
-
 void JHSearch::ckpipe(std::ostream& os) const
 {
     auto ckend = ckdata + cksize;
@@ -61,7 +42,7 @@ bool JHSearch::shunx (card_index_t i)
     if (kanx(i)) {
         return true;
     }
-    card_size_t fine = vec[i];
+    auto fine = vec[i];
     if (fine > vec[i + 1]) fine = vec[i + 1];
     if (fine > vec[i + 2]) fine = vec[i + 2];
     card_index_t j = vec[i] > fine && gui > 0
@@ -111,7 +92,7 @@ bool JHSearch::kanx (card_index_t i)
         else if (1 << i & 0x3fdfeff) return shunx(i);
         else break;
     }
-    card_count_t rest = vec[i];
+    auto rest = vec[i];
     card_t c = itoc(i);
     while (rest > 2) {
         rest -= 3;
@@ -169,7 +150,7 @@ bool JHSearch::zix (card_index_t i)
         else if (vec[i] < 1) ++i;
         else break;
     }
-    card_count_t rest = vec[i];
+    auto rest = vec[i];
     card_t c = itoc(i);
     while (rest > 2) {
         rest -= 3;

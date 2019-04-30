@@ -9,7 +9,7 @@
 #include <functional>
 
 typedef signed char card_t;
-typedef size_t card_size_t;
+typedef uint16_t card_size_t;
 
 typedef uint_least32_t card_index_t;
 typedef unsigned char  card_count_t;
@@ -71,8 +71,8 @@ public:
     card_vector_t vec;
     card_t jiang1;
     card_t jiang2;
-    uint16_t gui;
-    uint16_t cksize;
+    card_size_t gui;
+    card_size_t cksize;
     callback_t *callback;
     card_t ckdata[];
     
@@ -83,24 +83,24 @@ public:
         card_vector_t vec;
         card_t jiang1;
         card_t jiang2;
-        uint16_t gui;
-        uint16_t cksize;
+        card_size_t gui;
+        card_size_t cksize;
         callback_t *callback;
         card_t ckdata[CKSIZE];
 
-        Alloc(uint16_t _gui = 0, card_t _jiang = NOCARD)
+        Alloc(card_size_t _gui = 0, card_t _jiang = NOCARD)
         : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
 
-        Alloc(const card_vector_t& _vec, uint16_t _gui = 0, card_t _jiang = NOCARD)
+        Alloc(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
         : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
 
         operator JHSearch& () { return *(JHSearch*)this; }
     };
 
-    JHSearch(uint16_t _gui = 0, card_t _jiang = NOCARD)
+    JHSearch(card_size_t _gui = 0, card_t _jiang = NOCARD)
     : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
     
-    JHSearch(const card_vector_t& _vec, uint16_t _gui = 0, card_t _jiang = NOCARD)
+    JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
     : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
     
     void* operator new(size_t size, card_size_t cksize) {
