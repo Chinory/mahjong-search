@@ -73,9 +73,9 @@ public:
     card_t jiang1;
     card_t jiang2;
     unsigned short gui;
-    unsigned short length;
+    unsigned short cksize;
     callback_t callback;
-    card_t ckbegin[];
+    card_t ckdata[];
     
     template <card_size_t CKSIZE>
     class Fixed
@@ -85,24 +85,24 @@ public:
         card_t jiang1;
         card_t jiang2;
         unsigned short gui;
-        unsigned short length;
+        unsigned short cksize;
         callback_t callback;
-        card_t ckbegin[CKSIZE];
+        card_t ckdata[CKSIZE];
         
         Fixed(card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec(), jiang1(_jiang), jiang2(_jiang), callback(_callback), length(0) {};
+        : vec(), jiang1(_jiang), jiang2(_jiang), callback(_callback), cksize(0) {};
         
         Fixed(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), length(0), callback(_callback) {};
+        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
         
         inline void entry () { ((JHSearch*)this)->entry(); }
     };
     
     JHSearch(card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), length(0), callback(_callback) {};
+    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
     
     JHSearch(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), length(0), callback(_callback) {};
+    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
     
     void* operator new(size_t size, card_size_t cksize) {
         return ::operator new(size + sizeof(card_t[cksize]));
@@ -116,53 +116,53 @@ public:
     void ckpipe(std::ostream& os) const;
     
     inline void ckpush_shun_fine(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = card_next(c);
         ck[2] = card_next(card_next(c));
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_shun_fix_front(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = card_gui(card_prev(c));
         ck[1] = c;
         ck[2] = card_next(c);
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_shun_fix_middle(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = card_gui(card_next(c));
         ck[2] = card_next(card_next(c));
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_shun_fix_back(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = card_next(c);
         ck[2] = card_gui(card_next(card_next(c)));
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_kezi_fine(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = c;
         ck[2] = c;
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_kezi_fix1(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = c;
         ck[2] = card_gui(c);
-        length += 3;
+        cksize += 3;
     }
     inline void ckpush_kezi_fix2(const card_t c) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         ck[0] = c;
         ck[1] = card_gui(c);
         ck[2] = card_gui(c);
-        length += 3;
+        cksize += 3;
     }
     inline void shun_use_fine(const card_t c, const card_index_t i) {
         vec[i + 0] -= 1;
@@ -190,25 +190,25 @@ public:
         ckpush_shun_fix_front(c);
     }
     inline void shun_drop_fine(const card_index_t i) {
-        length -= 3;
+        cksize -= 3;
         vec[i + 0] += 1;
         vec[i + 1] += 1;
         vec[i + 2] += 1;
     }
     inline void shun_drop_fine_fine(const card_index_t i) {
-        length -= 6;
+        cksize -= 6;
         vec[i + 0] += 2;
         vec[i + 1] += 2;
         vec[i + 2] += 2;
     }
     inline void shun_drop_fix(const card_index_t i, const card_index_t j) {
-        length -= 3;
+        cksize -= 3;
         vec[i + 0] += 1;
         vec[i + j] += 1;
         gui += 1;
     }
     inline void shun_turn_fix(const card_index_t i, const card_index_t j) {
-        card_t* ck = ckbegin + length;
+        card_t* ck = ckdata + cksize;
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;
