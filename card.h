@@ -59,7 +59,7 @@ inline card_index_t ctoi (const card_t card)
             case 4: return point < 8 ? point + 26 : static_cast<card_index_t>(-1);
         }
     }
-    return CARD_INDEX_INVAILD;
+    return static_cast<card_index_t>(-1);
 }
 inline card_t itoc (const card_index_t index)
 {
