@@ -110,18 +110,16 @@ bool JHSearch::search_zi_getjiang()
         return true; 
     }
     bool ok;
-    if (jiang1 == NOCARD) {
-        if (gui > 1) {
-            gui -= 2;
-            jiang1 = ANYGUI;
-            jiang2 = ANYGUI; 
-            ok = search_shun(0);
-        } else {
-            search_shun(0);
-            ok = true;
-        }
-    } else {
+    if (jiang1 != NOCARD) {
         ok = search_shun(0);
+    } else if (gui > 1) {
+        gui -= 2;
+        jiang1 = ANYGUI;
+        jiang2 = ANYGUI; 
+        ok = search_shun(0);
+    } else {
+        search_shun(0);
+        ok = true;
     }
     jiang1 = NOCARD;
     jiang2 = NOCARD;
