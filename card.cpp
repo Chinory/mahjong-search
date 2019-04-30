@@ -80,8 +80,9 @@ bool JHSearch::search_zi_getjiang()
         switch (rest) {
         case 0: continue;
         case 1:
-            if (gui < 1) break; else
-            if (jiang1 == NOCARD) {
+            if (gui < 1) {
+                break;
+            } else if (jiang1 == NOCARD) {
                 gui -= 1;
                 jiang1 = c;
                 jiang2 = card_gui(c);
@@ -116,6 +117,7 @@ bool JHSearch::search_zi_getjiang()
             jiang2 = ANYGUI; 
             ok = search_shun(0);
         } else {
+            search_shun(0);
             ok = true;
         }
     } else {
@@ -199,10 +201,8 @@ bool JHSearch::search_kezi (card_index_t i)
     }
     auto rest = vec[i];
     card_t c = itoc(i);
-    while (rest > 2) {
-        rest -= 3;
+    for (; rest > 2; rest -= 3)
         ckpush_kezi_fine(c);
-    }
     bool ok;
     switch (rest) {
     case 1: {
@@ -210,7 +210,8 @@ bool JHSearch::search_kezi (card_index_t i)
             ok = false;
         } else if (jiang1 == NOCARD) {
             gui -= 1;
-            jiang1 = c; jiang2 = card_gui(c);
+            jiang1 = c;
+            jiang2 = card_gui(c);
             ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
             jiang1 = NOCARD;
             gui += 1;
@@ -227,7 +228,8 @@ bool JHSearch::search_kezi (card_index_t i)
     }
     case 2: {
         if (jiang1 == NOCARD) {
-            jiang1 = c; jiang2 = c;
+            jiang1 = c;
+            jiang2 = c;
             ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
             jiang1 = NOCARD;
         } else if (gui > 0) {
