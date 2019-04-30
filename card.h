@@ -8,7 +8,7 @@
 #include <cstring>
 #include <functional>
 
-typedef int8_t  card_t;
+typedef int8_t    card_t;
 typedef uint8_t   card_count_t;
 typedef uint16_t  card_size_t;
 typedef uint32_t  card_index_t;
@@ -90,32 +90,32 @@ public:
         card_t ckdata[MAXCARD];
 
         Alloc(card_size_t _gui = 0, card_t _jiang = NOCARD)
-        : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {};
+        : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
 
         Alloc(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
-        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {};
+        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
 
-        operator JHSearch& () { return *(JHSearch*)this; }
+        operator JHSearch& () { return *reinterpret_cast<JHSearch*>(this); }
     };
 
     JHSearch(card_size_t _gui = 0, card_t _jiang = NOCARD)
-    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {};
-    
+    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
+
     JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
-    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {};
-    
+    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
+
     void* operator new(size_t size, card_size_t maxcard) {
-        return ::operator new(size + sizeof(card_t[maxcard]));
+        return ::operator new(size + sizeof(card_t) * maxcard);
     }
     void operator delete(void* pointee) {
         ::operator delete(pointee);
     }
-    
+
     void ckpipe(std::ostream& os) const;
     void vecpipe(std::ostream& os) const;
 
     bool search(callback_t* _callback);
-    
+
     inline void ckpush_shun_fine(const card_t c) {
         auto ckend = ckdata + cksize;
         ckend[0] = c;
