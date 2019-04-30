@@ -8,11 +8,10 @@
 #include <cstring>
 #include <functional>
 
-typedef signed char card_t;
-typedef uint16_t card_size_t;
-
-typedef uint_least32_t card_index_t;
-typedef unsigned char  card_count_t;
+typedef uint8_t   card_t;
+typedef uint8_t   card_count_t;
+typedef uint16_t  card_size_t;
+typedef uint32_t  card_index_t;
 typedef std::array<card_count_t, 34> card_vector_t;
 
 #define ANYGUI -1
