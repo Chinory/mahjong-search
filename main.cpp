@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 int main (int argc, char *argv[])
 {
     card_vector_t vec = {0};
@@ -48,13 +49,15 @@ int main (int argc, char *argv[])
     }
     card_t jiang = num;
 
-    auto callback = [](const JHSearch& hu)->bool{
+    JHSearch::callback_t callback = [](const JHSearch& hu)->bool{
         hu.ckpipe(cout);
         cout << endl;
         return false;
     };
     // cout << "sizeof(JHSearch::callback_t) = " << sizeof(JHSearch::callback_t) << endl;
-    searchJH(vec, gui, jiang, callback);
+    JHSearch::Alloc<64> _hu(vec, gui, jiang);
+    JHSearch& hu = _hu;
+    hu.search(&callback);
     return 0;
 }
 

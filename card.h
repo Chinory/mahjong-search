@@ -68,41 +68,44 @@ class JHSearch
 {
 public:
     typedef std::function<bool(const JHSearch&)> callback_t;
-    
     card_vector_t vec;
     card_t jiang1;
     card_t jiang2;
-    unsigned short gui;
-    unsigned short cksize;
-    callback_t callback;
+    uint16_t gui;
+    uint16_t cksize;
+    callback_t *callback;
     card_t ckdata[];
     
     template <card_size_t CKSIZE>
-    class Fixed
+    class Alloc
     {
     public:
         card_vector_t vec;
         card_t jiang1;
         card_t jiang2;
-        unsigned short gui;
-        unsigned short cksize;
-        callback_t callback;
+        uint16_t gui;
+        uint16_t cksize;
+        callback_t *callback;
         card_t ckdata[CKSIZE];
+
+        Alloc(uint16_t _gui = 0, card_t _jiang = NOCARD)
+        : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
+
+        Alloc(const card_vector_t& _vec, uint16_t _gui = 0, card_t _jiang = NOCARD)
+        : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
         
-        Fixed(card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec(), jiang1(_jiang), jiang2(_jiang), callback(_callback), cksize(0) {};
-        
-        Fixed(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-        : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
-        
-        inline void entry () { ((JHSearch*)this)->entry(); }
+        inline bool search (callback_t* _callback) { return ((JHSearch*)this)->search(_callback); }
+
+        operator JHSearch& () {
+            return *(JHSearch*)this;
+        }
     };
+
+    JHSearch(uint16_t _gui = 0, card_t _jiang = NOCARD)
+    : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
     
-    JHSearch(card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
-    
-    JHSearch(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, callback_t _callback)
-    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(_callback) {};
+    JHSearch(const card_vector_t& _vec, uint16_t _gui = 0, card_t _jiang = NOCARD)
+    : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), callback(nullptr) {};
     
     void* operator new(size_t size, card_size_t cksize) {
         return ::operator new(size + sizeof(card_t[cksize]));
@@ -111,7 +114,7 @@ public:
         ::operator delete(pointee);
     }
     
-    void entry();
+    bool search(callback_t* _callback);
     
     void ckpipe(std::ostream& os) const;
     
@@ -228,7 +231,7 @@ protected:
 };
 
 
-void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSearch::callback_t _callback);
+// void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSearch::callback_t _callback);
 
 
 #endif // CARD_INCLUDED
