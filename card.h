@@ -110,9 +110,9 @@ public:
         ::operator delete(pointee);
     }
     
-    bool search(callback_t* _callback);
-    
     void ckpipe(std::ostream& os) const;
+
+    bool search(callback_t* _callback);
     
     inline void ckpush_shun_fine(const card_t c) {
         auto ckend = ckdata + cksize;
@@ -226,9 +226,6 @@ protected:
     bool search_kezi (card_index_t i);
     bool search_summary ();
 };
-
-
-// void searchJH(const card_vector_t& _vec, card_size_t _gui, card_t _jiang, JHSearch::callback_t _callback);
 
 
 #endif // CARD_INCLUDED
