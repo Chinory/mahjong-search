@@ -220,9 +220,10 @@ public:
     }
     
 protected:
+    bool zixj ();
+    bool zixnj ();
     bool shunx (card_index_t i);
     bool kanx (card_index_t i);
-    bool zix (card_index_t i);
     bool hux ();
 };
 

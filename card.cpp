@@ -15,12 +15,107 @@ bool JHSearch::search (callback_t* _callback)
 {
     if (!callback) {
         callback = _callback;
-        shunx(0);
+        if (jiang1 != NOCARD) zixnj();
+        else if (!zixj()) zixnj();
         callback = nullptr;
         return true;
     } else {
         return false;
     }
+}
+
+bool JHSearch::zixnj()
+{
+    auto _gui = gui;
+    for (card_index_t i = 27; i < 34; ++i) {
+        auto rest = vec[i];
+        if (rest < 1) continue;
+        card_t c = itoc(i);
+        for (; rest > 2; rest -= 3)
+            ckpush_kezi_fine(c);
+        switch (rest) {
+        case 0: continue;
+        case 1:
+            if (gui > 1) {
+                gui -= 2;
+                ckpush_kezi_fix2(c);
+                continue;
+            } else break;                
+        case 2:
+            if (gui > 0) {
+                gui -= 1;
+                ckpush_kezi_fix1(c);
+                continue;
+            } else break;
+        }
+        gui = _gui;
+        cksize = 0;
+        return true;
+    }
+    bool ok = shunx(0);
+    gui = _gui;
+    cksize = 0;
+    return ok;
+}
+
+bool JHSearch::zixj()
+{
+    auto _gui = gui;
+    for (card_index_t i = 27; i < 34; ++i) {
+        auto rest = vec[i];
+        if (rest < 1) continue;
+        card_t c = itoc(i);
+        for (; rest > 2; rest -= 3)
+            ckpush_kezi_fine(c);
+        switch (rest) {
+            case 0: continue;
+            case 1: {
+                if (gui < 1) break;
+                if (jiang1 == NOCARD) {
+                    gui -= 1;
+                    jiang1 = c; jiang2 = card_gui(c);
+                    continue;
+                } else if (gui > 1) {
+                    gui -= 2;
+                    ckpush_kezi_fix2(c);
+                    continue;
+                } else break;
+            }
+            case 2: {
+                if (jiang1 == NOCARD) {
+                    jiang1 = c; jiang2 = c;
+                    continue;
+                } else if (gui > 0) {
+                    gui -= 1;
+                    ckpush_kezi_fix1(c);
+                    continue;
+                } else break;
+            }
+        }
+        jiang1 = NOCARD;
+        jiang2 = NOCARD;
+        gui = _gui;
+        cksize = 0;
+        return true; 
+    }
+    bool ok;
+    if (jiang1 == NOCARD) {
+        if (gui > 1) {
+            gui -= 2;
+            jiang1 = ANYGUI;
+            jiang2 = ANYGUI; 
+            ok = shunx(0);
+        } else {
+            ok = true;
+        }
+    } else {
+        ok = shunx(0);
+    }
+    jiang1 = NOCARD;
+    jiang2 = NOCARD;
+    gui = _gui;
+    cksize = 0;
+    return ok;
 }
 
 bool JHSearch::shunx (card_index_t i)
@@ -87,7 +182,7 @@ bool JHSearch::shunx (card_index_t i)
 bool JHSearch::kanx (card_index_t i)
 {
     if (vec[i] < 1) for (++i;;) {
-        if (i > 26) return zix(i);
+        if (i > 26) return hux();
         else if (vec[i] < 1) ++i;
         else if (1 << i & 0x3fdfeff) return shunx(i);
         else break;
@@ -143,76 +238,11 @@ bool JHSearch::kanx (card_index_t i)
     return ok;
 }
 
-bool JHSearch::zix (card_index_t i)
-{
-    if (vec[i] < 1) for (++i;;) {
-        if (i > 33) return hux();
-        else if (vec[i] < 1) ++i;
-        else break;
-    }
-    auto rest = vec[i];
-    card_t c = itoc(i);
-    while (rest > 2) {
-        rest -= 3;
-        ckpush_kezi_fine(c);
-    }
-    bool ok;
-    switch (rest) {
-    case 1: {
-        if (gui < 1) {
-            ok = false;
-        } else if (jiang1 == NOCARD) {
-            gui -= 1;
-            jiang1 = c; jiang2 = card_gui(c);
-            ok = i < 33 ? zix(i + 1) : hux();
-            jiang1 = NOCARD;
-            gui += 1;
-        } else if (gui > 1) {
-            gui -= 2;
-            ckpush_kezi_fix2(c);
-            ok = i < 33 ? zix(i + 1) : hux();
-            cksize -= 3;
-            gui += 2;
-        } else {
-            ok = false;
-        }
-        break;
-    }
-    case 2: {
-        if (jiang1 == NOCARD) {
-            jiang1 = c; jiang2 = c;
-            ok = i < 33 ? zix(i + 1) : hux();
-            jiang1 = NOCARD;
-        } else if (gui > 0) {
-            gui -= 1;
-            ckpush_kezi_fix1(c);
-            ok = i < 33 ? zix(i + 1) : hux();
-            cksize -= 3;
-            gui += 1;
-        } else {
-            ok = false;
-        }
-        break;
-    }
-    default:
-        ok = i < 33 ? zix(i + 1) : hux();
-    }
-    cksize -= (vec[i] - rest);
-    return ok;
-}
 
 bool JHSearch::hux ()
 {
     if (jiang1 != NOCARD) {
         return (*callback)(*this);
-    } else if (gui > 1) {
-        gui -= 2;
-        jiang1 = ANYGUI; jiang2 = ANYGUI;
-        bool ok = (*callback)(*this);
-        jiang1 = NOCARD;
-        gui += 2;
-        return ok;
-    } else {
-        return false;
     }
+    return false;
 }
