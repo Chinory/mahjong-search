@@ -116,52 +116,52 @@ public:
     void ckpipe(std::ostream& os) const;
     
     inline void ckpush_shun_fine(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = card_next(c);
-        ck[2] = card_next(card_next(c));
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = card_next(c);
+        ckend[2] = card_next(card_next(c));
         cksize += 3;
     }
     inline void ckpush_shun_fix_front(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = card_gui(card_prev(c));
-        ck[1] = c;
-        ck[2] = card_next(c);
+        auto ckend = ckdata + cksize;
+        ckend[0] = card_gui(card_prev(c));
+        ckend[1] = c;
+        ckend[2] = card_next(c);
         cksize += 3;
     }
     inline void ckpush_shun_fix_middle(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = card_gui(card_next(c));
-        ck[2] = card_next(card_next(c));
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = card_gui(card_next(c));
+        ckend[2] = card_next(card_next(c));
         cksize += 3;
     }
     inline void ckpush_shun_fix_back(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = card_next(c);
-        ck[2] = card_gui(card_next(card_next(c)));
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = card_next(c);
+        ckend[2] = card_gui(card_next(card_next(c)));
         cksize += 3;
     }
     inline void ckpush_kezi_fine(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = c;
-        ck[2] = c;
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = c;
+        ckend[2] = c;
         cksize += 3;
     }
     inline void ckpush_kezi_fix1(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = c;
-        ck[2] = card_gui(c);
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = c;
+        ckend[2] = card_gui(c);
         cksize += 3;
     }
     inline void ckpush_kezi_fix2(const card_t c) {
-        card_t* ck = ckdata + cksize;
-        ck[0] = c;
-        ck[1] = card_gui(c);
-        ck[2] = card_gui(c);
+        auto ckend = ckdata + cksize;
+        ckend[0] = c;
+        ckend[1] = card_gui(c);
+        ckend[2] = card_gui(c);
         cksize += 3;
     }
     inline void shun_use_fine(const card_t c, const card_index_t i) {
@@ -208,15 +208,15 @@ public:
         gui += 1;
     }
     inline void shun_turn_fix(const card_index_t i, const card_index_t j) {
-        card_t* ck = ckdata + cksize;
+        auto ckend = ckdata + cksize;
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;
-            ck[-1] = card_gui(ck[-1]);
+            ckend[-1] = card_gui(ckend[-1]);
         } else {
             vec[i + 1] += 1;
             gui -= 1;
-            ck[-2] = card_gui(ck[-2]);
+            ckend[-2] = card_gui(ckend[-2]);
         }
     }
     
