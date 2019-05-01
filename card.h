@@ -150,49 +150,49 @@ public:
     bool search(callback_t* _callback);
 
     inline void ckpush_shun_fine(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = card_next(c);
         ckend[2] = card_next(card_next(c));
         cksize += 3;
     }
     inline void ckpush_shun_fix_front(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = card_gui(card_prev(c));
         ckend[1] = c;
         ckend[2] = card_next(c);
         cksize += 3;
     }
     inline void ckpush_shun_fix_middle(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = card_gui(card_next(c));
         ckend[2] = card_next(card_next(c));
         cksize += 3;
     }
     inline void ckpush_shun_fix_back(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = card_next(c);
         ckend[2] = card_gui(card_next(card_next(c)));
         cksize += 3;
     }
     inline void ckpush_kezi_fine(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = c;
         ckend[2] = c;
         cksize += 3;
     }
     inline void ckpush_kezi_fix1(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = c;
         ckend[2] = card_gui(c);
         cksize += 3;
     }
     inline void ckpush_kezi_fix2(const card_t c) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         ckend[0] = c;
         ckend[1] = card_gui(c);
         ckend[2] = card_gui(c);
@@ -242,7 +242,7 @@ public:
         gui += 1;
     }
     inline void shun_turn_fix(const card_index_t i, const card_index_t j) {
-        auto ckend = ckdata + cksize;
+        card_t* ckend = ckdata + cksize;
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;

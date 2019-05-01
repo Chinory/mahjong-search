@@ -3,8 +3,8 @@
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
-    auto ckend = ckdata + cksize;
-    for (auto i = ckdata; i < ckend; i += 3) {
+    const card_t* ckend = ckdata + cksize;
+    for (const card_t* i = ckdata; i < ckend; i += 3) {
         os << '[' << static_cast<int>(i[0]) << ',' << static_cast<int>(i[1]) << ',' << static_cast<int>(i[2]) << ']' << ',';
     }
     os << '[' << static_cast<int>(jiang1) << ',' << static_cast<int>(jiang2) << ']';
@@ -12,7 +12,7 @@ void JHSearch::ckpipe(std::ostream& os) const
 
 void JHSearch::vecpipe(std::ostream& os) const
 {
-    auto i = vec.begin();
+    const card_count_t* i = vec.begin();
     os << '[' << static_cast<int>(*i);
     for (++i; i != vec.end(); ++i) {
         os << ',' << static_cast<int>(*i);
@@ -35,9 +35,9 @@ bool JHSearch::search (callback_t* _callback)
 
 bool JHSearch::search_zi_nojiang()
 {
-    auto guiall = gui;
+    card_size_t guiall = gui;
     for (card_index_t i = 27; i < 34; ++i) {
-        auto rest = vec[i];
+        card_count_t rest = vec[i];
         if (rest < 1) continue;
         card_t c = itoc(i);
         for (; rest > 2; rest -= 3)
@@ -69,9 +69,9 @@ bool JHSearch::search_zi_nojiang()
 
 bool JHSearch::search_zi_getjiang()
 {
-    auto guiall = gui;
+    card_size_t guiall = gui;
     for (card_index_t i = 27; i < 34; ++i) {
-        auto rest = vec[i];
+        card_count_t rest = vec[i];
         if (rest < 1) continue;
         card_t c = itoc(i);
         for (; rest > 2; rest -= 3)
@@ -146,7 +146,7 @@ bool JHSearch::search_shun (card_index_t i)
     if (search_kezi(i)) {
         return true;
     }
-    auto fine = vec[i];
+    card_count_t fine = vec[i];
     if (fine > vec[i + 1]) fine = vec[i + 1];
     if (fine > vec[i + 2]) fine = vec[i + 2];
     card_index_t j = vec[i] > fine && gui > 0
@@ -196,7 +196,7 @@ bool JHSearch::search_kezi (card_index_t i)
         else if (1 << i & 0x3fdfeff) return search_shun(i);
         else break;
     }
-    auto rest = vec[i];
+    card_count_t rest = vec[i];
     card_t c = itoc(i);
     for (; rest > 2; rest -= 3)
         ckpush_kezi_fine(c);
