@@ -8,7 +8,7 @@
 typedef int8_t    card_t;
 typedef uint8_t   card_count_t;
 typedef uint16_t  card_size_t;
-typedef uint32_t  card_index_t;
+typedef uint_fast8_t  card_index_t;
 typedef std::array<card_count_t, 34> card_vector_t;
 
 #define ANYGUI -1
@@ -204,7 +204,7 @@ public:
         vec[i + 2] -= 1;
         ckpush_shun_fine(c);
     }
-    inline void shun_use_fix(const card_t c, const card_index_t i, const card_index_t j) {
+    inline void shun_use_fix(const card_t c, const card_index_t i, const uint8_t j) {
         if (j & 1) {
             vec[i + 0] -= 1;
             vec[i + 1] -= 1;
@@ -235,13 +235,13 @@ public:
         vec[i + 1] += 2;
         vec[i + 2] += 2;
     }
-    inline void shun_drop_fix(const card_index_t i, const card_index_t j) {
+    inline void shun_drop_fix(const card_index_t i, const uint8_t j) {
         cksize -= 3;
         vec[i + 0] += 1;
         vec[i + j] += 1;
         gui += 1;
     }
-    inline void shun_turn_fix(const card_index_t i, const card_index_t j) {
+    inline void shun_turn_fix(const card_index_t i, const uint8_t j) {
         card_t* ckend = ckdata + cksize;
         if (j & 1) {
             vec[i + 2] += 1;
