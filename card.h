@@ -111,7 +111,7 @@ public:
     card_t ckdata[];
 
     template <card_size_t MAXCARD>
-    class Alloc
+    class Fixed
     {
     public:
         card_vector_t vec;
@@ -122,10 +122,10 @@ public:
         callback_t *callback;
         card_t ckdata[MAXCARD];
 
-        Alloc(card_size_t _gui = 0, card_t _jiang = NOCARD)
+        Fixed(card_size_t _gui = 0, card_t _jiang = NOCARD)
         : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
 
-        Alloc(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
+        Fixed(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
         : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
 
         operator JHSearch& () { return *reinterpret_cast<JHSearch*>(this); }
@@ -137,11 +137,20 @@ public:
     JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
     : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), callback(nullptr) {}
 
-    void* operator new(size_t size, card_size_t maxcard) {
-        return ::operator new(size + sizeof(card_t) * maxcard);
+    static constexpr size_t size(const card_size_t maxcard) {
+        return sizeof(JHSearch) + sizeof(card_t) * maxcard;
     }
-    void operator delete(void* pointee) {
-        ::operator delete(pointee);
+    void* operator new (size_t, void* p) {
+        return p;
+    }
+    void* operator new (size_t count, card_size_t maxcard) {
+        return ::operator new(count + sizeof(card_t) * maxcard);
+    }
+    void* operator new[] (size_t count, card_size_t maxcard) {
+        return ::operator new(count + sizeof(card_t) * maxcard);
+    }
+    void operator delete (void* ptr) {
+        ::operator delete(ptr);
     }
 
     void ckpipe(std::ostream& os) const;
