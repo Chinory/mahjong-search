@@ -20,7 +20,7 @@ typedef std::array<card_count_t, 34> card_vector_t;
 #define CARD_DEC
 
 #ifdef CARD_DEC
-inline card_index_t ctoi (const card_t card)
+constexpr card_index_t ctoi (const card_t card)
 {
     if (card < 11) return static_cast<card_index_t>(-1);
     else if (card < 20) return static_cast<card_index_t>(card) - (11 - 0);
@@ -29,7 +29,7 @@ inline card_index_t ctoi (const card_t card)
     else if (card < 48) return static_cast<card_index_t>(card) - (41 - 27);
     else return static_cast<card_index_t>(-1);
 }
-inline card_t itoc (const card_index_t index)
+constexpr card_t itoc (const card_index_t index)
 {
     if (index < 18) {
         if (index < 9) {
@@ -48,7 +48,7 @@ inline card_t itoc (const card_index_t index)
 #endif // CARD_DEC
 
 #ifdef CARD_HEX
-inline card_index_t ctoi (const card_t card)
+constexpr card_index_t ctoi (const card_t card)
 {
     card_index_t point = card & 15;
     if (point) {
@@ -61,7 +61,7 @@ inline card_index_t ctoi (const card_t card)
     }
     return static_cast<card_index_t>(-1);
 }
-inline card_t itoc (const card_index_t index)
+constexpr card_t itoc (const card_index_t index)
 {
     if (index < 18) {
         if (index < 9) {
@@ -80,7 +80,7 @@ inline card_t itoc (const card_index_t index)
 #endif // CARD_HEX
 
 #ifdef CARD_CONTI
-inline card_index_t ctoi (const card_t card)
+constexpr card_index_t ctoi (const card_t card)
 {
     if (card > 0 && card < 36) {
         return static_cast<card_index_t>(card) - 1;
@@ -88,7 +88,7 @@ inline card_index_t ctoi (const card_t card)
         return static_cast<card_index_t>(-1);
     }
 }
-inline card_t itoc (const card_index_t index)
+constexpr card_t itoc (const card_index_t index)
 {
     if (index < 34) {
         return static_cast<card_t>(index + 1);
