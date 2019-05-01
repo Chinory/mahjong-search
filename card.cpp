@@ -3,8 +3,7 @@
 
 void JHSearch::ckpipe(std::ostream& os) const
 {
-    const card_t* ckend = ckdata + cksize;
-    for (const card_t* i = ckdata; i < ckend; i += 3) {
+    for (const card_t *i = ckend - cksize; i < ckend; i += 3) {
         os << '[' << static_cast<int>(i[0]) << ',' << static_cast<int>(i[1]) << ',' << static_cast<int>(i[2]) << ']' << ',';
     }
     os << '[' << static_cast<int>(jiang1) << ',' << static_cast<int>(jiang2) << ']';
@@ -12,7 +11,7 @@ void JHSearch::ckpipe(std::ostream& os) const
 
 void JHSearch::vecpipe(std::ostream& os) const
 {
-    const card_count_t* i = vec.begin();
+    const card_count_t *i = vec.begin();
     os << '[' << static_cast<int>(*i);
     for (++i; i != vec.end(); ++i) {
         os << ',' << static_cast<int>(*i);
@@ -20,12 +19,28 @@ void JHSearch::vecpipe(std::ostream& os) const
     os << ']';
 }
 
-bool JHSearch::search (callback_t* _callback)
+bool JHSearch::search (callback_t *_callback)
 {
-    if (!callback) {
+    if (!callback && ckend) {
         callback = _callback;
         if (jiang1 != NOCARD) search_zi_nojiang();
         else if (!search_zi_getjiang()) search_zi_nojiang();
+        callback = nullptr;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool JHSearch::search (callback_t *_callback, card_t *_ckend)
+{
+    if (!callback) {
+        callback = _callback;
+        card_t *const __ckend = ckend;
+        ckend = _ckend;
+        if (jiang1 != NOCARD) search_zi_nojiang();
+        else if (!search_zi_getjiang()) search_zi_nojiang();
+        ckend = __ckend;
         callback = nullptr;
         return true;
     } else {
@@ -58,11 +73,13 @@ bool JHSearch::search_zi_nojiang()
             } else break;
         }
         gui = guiall;
+        ckend -= cksize;
         cksize = 0;
         return true;
     }
     bool ok = search_shun(0);
     gui = guiall;
+    ckend -= cksize;
     cksize = 0;
     return ok;
 }
@@ -105,6 +122,7 @@ bool JHSearch::search_zi_getjiang()
         jiang1 = NOCARD;
         jiang2 = NOCARD;
         gui = guiall;
+        ckend -= cksize;
         cksize = 0;
         return true;
     }
@@ -123,6 +141,7 @@ bool JHSearch::search_zi_getjiang()
     jiang1 = NOCARD;
     jiang2 = NOCARD;
     gui = guiall;
+    ckend -= cksize;
     cksize = 0;
     return ok;
 }
@@ -220,6 +239,7 @@ bool JHSearch::search_kezi (card_index_t i)
             ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
                : 1 << i & 0x2010080 ? search_kezi(i + 1)
                                     : search_summary();
+            ckend -= 3;
             cksize -= 3;
             gui += 2;
         } else {
@@ -241,6 +261,7 @@ bool JHSearch::search_kezi (card_index_t i)
             ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
                : 1 << i & 0x2010080 ? search_kezi(i + 1)
                                     : search_summary();
+            ckend -= 3;
             cksize -= 3;
             gui += 1;
         } else {
@@ -253,7 +274,9 @@ bool JHSearch::search_kezi (card_index_t i)
            : 1 << i & 0x2010080 ? search_kezi(i + 1)
                                 : search_summary();
     }
-    cksize -= (vec[i] - rest);
+    rest = vec[i] - rest;
+    ckend -= rest;
+    cksize -= rest;
     return ok;
 }
 

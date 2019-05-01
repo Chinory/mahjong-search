@@ -13,27 +13,28 @@ using namespace std;
 
 int main (int argc, char *argv[])
 {
-    JHSearch::Fixed<MAXCARD> _searchData;
-    JHSearch& jh = _searchData;
-    card_size_t guiCount;
+    JHSearch jh;
+    card_size_t guiCount = 0;
+    card_size_t cardCount = 0;
     if (argc > 1) {
+        cardCount = 0;
         istringstream iss(argv[1]);
         for (string card; getline(iss, card, ',');) {
-            auto i = ctoi(stoi(card));
-            if (~i) ++jh.vec[i];
+            card_index_t i = ctoi(static_cast<card_t>(stoi(card)));
+            if (~i) { ++jh.vec[i]; ++cardCount; }
         }
         if (argc > 2) {
-            guiCount = stoi(argv[2]);
-            jh.gui = guiCount;
+            jh.gui = static_cast<card_size_t>(stoi(argv[2]));
+            guiCount = jh.gui;
             if (argc > 3) {
-                int jiang = stoi(argv[3]);
+                card_t jiang = static_cast<card_t>(stoi(argv[3]));
                 jh.jiang1 = jiang;
                 jh.jiang2 = jiang;
             }
         }
     }
     JHSearch::callback_t callback = [&](const JHSearch& hu)->bool{
-        cout << (int)(guiCount - hu.gui) << '=';
+        cout << static_cast<int>(guiCount - hu.gui) << '=';
         hu.ckpipe(cout);
         cout << endl;
         return false;
@@ -45,9 +46,10 @@ int main (int argc, char *argv[])
             cin >> line;
             if (line.length() == 0) break;
             istringstream iss(line);
+            cardCount = 0;
             for (string card; getline(iss, card, ',');) {
-                auto i = ctoi(stoi(card));
-                if (~i) ++jh.vec[i];
+                card_index_t i = ctoi(static_cast<card_t>(stoi(card)));
+                if (~i) { ++jh.vec[i]; ++cardCount; }
             }
             jh.vecpipe(cout);
             cout << endl;
@@ -57,26 +59,22 @@ int main (int argc, char *argv[])
             string line;
             cin >> line;
             if (line.length() == 0) break;
-
-            guiCount = stoi(line);
-            jh.gui = guiCount;
+            jh.gui = static_cast<card_size_t>(stoi(line));
+            guiCount = jh.gui;
         }
         if (argc < 4) {
             cerr << "(3/3) jiang: ";
             string line;
             cin >> line;
             if (line.length() == 0) break;
-            int jiang = stoi(line);
-            jh.jiang1 = static_cast<card_t>(jiang);
-            jh.jiang2 = static_cast<card_t>(jiang);
+            card_t jiang = static_cast<card_t>(stoi(line));
+            jh.jiang1 = jiang;
+            jh.jiang2 = jiang;
         }
-        jh.search(&callback);
-        if (argc > 3) {
-            break;
-        }
-        if (argc < 2) {
-            jh.vec.fill(0);
-        }
+        card_t ckdata[cardCount + jh.cksize_gui()];
+        jh.search(&callback, ckdata);
+        if (argc > 3) break;
+        if (argc < 2) jh.vec.fill(0);
     }
     return 0;
 }
