@@ -209,13 +209,17 @@ bool JHSearch::search_kezi (card_index_t i)
             gui -= 1;
             jiang1 = c;
             jiang2 = card_gui(c);
-            ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
+            ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
+               : 1 << i & 0x2010080 ? search_kezi(i + 1)
+                                    : search_summary();
             jiang1 = NOCARD;
             gui += 1;
         } else if (gui > 1) {
             gui -= 2;
             ckpush_kezi_fix2(c);
-            ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
+            ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
+               : 1 << i & 0x2010080 ? search_kezi(i + 1)
+                                    : search_summary();
             cksize -= 3;
             gui += 2;
         } else {
@@ -227,12 +231,16 @@ bool JHSearch::search_kezi (card_index_t i)
         if (jiang1 == NOCARD) {
             jiang1 = c;
             jiang2 = c;
-            ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
+            ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
+               : 1 << i & 0x2010080 ? search_kezi(i + 1)
+                                    : search_summary();
             jiang1 = NOCARD;
         } else if (gui > 0) {
             gui -= 1;
             ckpush_kezi_fix1(c);
-            ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
+            ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
+               : 1 << i & 0x2010080 ? search_kezi(i + 1)
+                                    : search_summary();
             cksize -= 3;
             gui += 1;
         } else {
@@ -241,7 +249,9 @@ bool JHSearch::search_kezi (card_index_t i)
         break;
     }
     default:
-        ok = 1 << i & 0x1feff7f ? search_shun(i + 1) : 1 << i & 0x2010080 ? search_kezi(i + 1) : search_summary();
+        ok = 1 << i & 0x1feff7f ? search_shun(i + 1)
+           : 1 << i & 0x2010080 ? search_kezi(i + 1)
+                                : search_summary();
     }
     cksize -= (vec[i] - rest);
     return ok;
@@ -252,6 +262,7 @@ bool JHSearch::search_summary ()
 {
     if (jiang1 != NOCARD) {
         return (*callback)(*this);
+    } else {
+        return false;
     }
-    return false;
 }
