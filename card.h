@@ -9,7 +9,7 @@
 typedef int8_t    card_t;
 typedef uint8_t   card_count_t;
 typedef uint16_t  card_size_t;
-typedef uint_fast8_t  card_index_t;
+typedef unsigned  card_index_t;
 typedef std::array<card_count_t, 34> card_vector_t;
 
 #define ANYGUI -1
