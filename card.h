@@ -20,7 +20,7 @@ typedef std::array<card_count_t, 34> card_vector_t;
 #define CARD_DEC
 
 #ifdef CARD_DEC
-constexpr card_index_t ctoi (const card_t card)
+constexpr card_index_t ctoi (const intmax_t card)
 {
     return static_cast<card_index_t>(
         card < 11 ? -1
@@ -31,7 +31,7 @@ constexpr card_index_t ctoi (const card_t card)
         : -1
     );
 }
-constexpr card_t itoc (const card_index_t index)
+constexpr card_t itoc (const uintmax_t index)
 {
     return static_cast<card_t>(
         index < 18 ? index < 9 ? index + (11 - 0) : index + (21 - 9)
@@ -43,23 +43,14 @@ constexpr card_t itoc (const card_index_t index)
 #endif // CARD_DEC
 
 #ifdef CARD_HEX
-#if __cplusplus < 201402L
-inline card_index_t ctoi (const card_t card)
-#else
-constexpr card_index_t ctoi (const card_t card)
-#endif
+constexpr card_index_t ctoi (const intmax_t card)
 {
-    card_index_t index = static_cast<card_index_t>(-1);
-    card_index_t point = card & 15;
-    if (point) switch (card >> 4) {
-        case 1: { if (point < 10) index = point - 1; break; }
-        case 2: { if (point < 10) index = point + 8; break; }
-        case 3: { if (point < 10) index = point + 17; break; }
-        case 4: { if (point < 8) index = point + 26; break; }
-    }
-    return index;
+    return static_cast<card_index_t>(
+        card > 0x10 && card < 0x48 && (card & 15) > 0 && (card & 15) < 10
+        ? (card >> 4) * 9 + (card & 15) - 10 : -1
+    );
 }
-constexpr card_t itoc (const card_index_t index)
+constexpr card_t itoc (const uintmax_t index)
 {
     return static_cast<card_t>(
         index < 18 ? index < 9 ? (index + 1) | 0x10 : (index - 8) | 0x20
@@ -71,13 +62,13 @@ constexpr card_t itoc (const card_index_t index)
 #endif // CARD_HEX
 
 #ifdef CARD_CONTI
-constexpr card_index_t ctoi (const card_t card)
+constexpr card_index_t ctoi (const intmax_t card)
 {
     return static_cast<card_index_t>(
         card > 0 && card < 36 ? card - 1 : -1
     );
 }
-constexpr card_t itoc (const card_index_t index)
+constexpr card_t itoc (const uintmax_t index)
 {
     return static_cast<card_t>(
         index < 34 ? index + 1 : NOCARD
