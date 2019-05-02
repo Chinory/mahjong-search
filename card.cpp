@@ -123,9 +123,9 @@ bool JHSearch::search_zi_getjiang()
         }
         jiang1 = NOCARD;
         jiang2 = NOCARD;
-        gui = guiall;
-    ckend -= (cksize - __cksize);
-    cksize = __cksize;
+        gui = __gui;
+        ckend -= (cksize - __cksize);
+        cksize = __cksize;
         return true;
     }
     bool ok;
@@ -142,7 +142,7 @@ bool JHSearch::search_zi_getjiang()
     }
     jiang1 = NOCARD;
     jiang2 = NOCARD;
-    gui = guiall;
+    gui = __gui;
     ckend -= (cksize - __cksize);
     cksize = __cksize;
     return ok;
