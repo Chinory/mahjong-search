@@ -71,7 +71,7 @@ int main (int argc, char *argv[])
             jh.jiang1 = jiang;
             jh.jiang2 = jiang;
         }
-        card_t ckdata[cardCount + jh.cksize_gui()];
+        card_t ckdata[cardCount + jh.cksize_for_gui()];
         jh.search(&callback, ckdata);
         if (argc > 3) break;
         if (argc < 2) jh.vec.fill(0);

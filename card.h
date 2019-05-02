@@ -3,6 +3,7 @@
 
 #include <array>
 #include <vector>
+#include <numeric>
 #include <functional>
 
 typedef int8_t    card_t;
@@ -97,7 +98,12 @@ public:
     void ckpipe(std::ostream& os) const;
     void vecpipe(std::ostream& os) const;
 
-    card_size_t cksize_gui () { return gui < 34 ? gui * 2 : 34 * 2; }
+    card_size_t cksize_for_vec () const {
+        return std::accumulate(vec.begin(), vec.end(), card_size_t(0));
+    }
+    card_size_t cksize_for_gui () const {
+        return gui < vec.size() ? gui * 2 : static_cast<card_size_t>(vec.size() * 2);
+    }
 
     bool search(callback_t *_callback);
     bool search(callback_t *_callback, card_t *_ckend);
