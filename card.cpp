@@ -50,7 +50,8 @@ bool JHSearch::search (callback_t *_callback, card_t *_ckend)
 
 bool JHSearch::search_zi_nojiang()
 {
-    card_size_t guiall = gui;
+    card_size_t __gui = gui;
+    card_size_t __cksize = cksize;
     for (card_index_t i = 27; i < 34; ++i) {
         card_count_t rest = vec[i];
         if (rest < 1) continue;
@@ -72,21 +73,22 @@ bool JHSearch::search_zi_nojiang()
                 continue;
             } else break;
         }
-        gui = guiall;
-        ckend -= cksize;
-        cksize = 0;
+        gui = __gui;
+        ckend -= (cksize - __cksize);
+        cksize = __cksize;
         return true;
     }
     bool ok = search_shun(0);
-    gui = guiall;
-    ckend -= cksize;
-    cksize = 0;
+    gui = __gui;
+    ckend -= (cksize - __cksize);
+    cksize = __cksize;
     return ok;
 }
 
 bool JHSearch::search_zi_getjiang()
 {
-    card_size_t guiall = gui;
+    card_size_t __gui = gui;
+    card_size_t __cksize = cksize;
     for (card_index_t i = 27; i < 34; ++i) {
         card_count_t rest = vec[i];
         if (rest < 1) continue;
@@ -122,8 +124,8 @@ bool JHSearch::search_zi_getjiang()
         jiang1 = NOCARD;
         jiang2 = NOCARD;
         gui = guiall;
-        ckend -= cksize;
-        cksize = 0;
+    ckend -= (cksize - __cksize);
+    cksize = __cksize;
         return true;
     }
     bool ok;
@@ -141,8 +143,8 @@ bool JHSearch::search_zi_getjiang()
     jiang1 = NOCARD;
     jiang2 = NOCARD;
     gui = guiall;
-    ckend -= cksize;
-    cksize = 0;
+    ckend -= (cksize - __cksize);
+    cksize = __cksize;
     return ok;
 }
 
