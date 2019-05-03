@@ -104,6 +104,12 @@ public:
     card_size_t cksize_for_gui () const {
         return gui < vec.size() ? gui * 2 : static_cast<card_size_t>(vec.size() * 2);
     }
+    card_size_t cksize_for_this () const {
+        return cksize_for_vec() + cksize_for_gui();
+    }
+    card_size_t cksize_for_this (const card_size_t vecsum) const {
+        return vecsum + cksize_for_gui();
+    }
 
     bool search(callback_t *_callback);
     bool search(callback_t *_callback, card_t *_ckend);

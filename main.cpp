@@ -1,15 +1,37 @@
 #include <iostream>
 #include <sstream>
 #include "card.h"
+#include <chrono>
 
 using namespace std;
 
 #define MAXCARD 256
-
-//a=[];for(c=1;c<5;++c)for(i=1;i<10;++i)for(n=1;n<5;++n)a.push(c*10+i);a.toString()
-
-//11,11,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,21,21,21,21,22,22,22,22,23,23,23,23,24,24,24,24,25,25,25,25,26,26,26,26,27,27,27,27,28,28,28,28,29,29,29,29,31,31,31,31,32,32,32,32,33,33,33,33,34,34,34,34,35,35,35,35,36,36,36,36,37,37,37,37,38,38,38,38,39,39,39,39,41,41,41,41,42,42,42,42,43,43,43,43,44,44,44,44,45,45,45,45,46,46,46,46,47,47,47,47,48,48,48,48,49,49,49,49
-
+#define BENCH_COUNT 0xFFF
+int benchmain ()
+{
+    auto start = chrono::system_clock::now();
+    static card_t cards[] = {0x11,0x12,0x13,0x14,0x15,0x12,0x13,0x14,0x15,0x16,0x11,0x12,0x13,0x14,0x15,0x12,0x13,0x14,0x15,0x16,0x11,0x12,0x13,0x14,0x15,0x12,0x13,0x14,0x15,0x16};
+    JHSearch::callback_t callback = [](const JHSearch&)->bool{
+        return true;
+    };
+    for (size_t count = BENCH_COUNT; count; --count) {
+        JHSearch jh(100);
+        card_size_t cardCount = 0;
+        for (auto i = cards, end = cards + sizeof(cards); i != end; ++i) {
+            card_index_t idx = ctoi(*i);
+            if (~idx) { ++jh.vec[idx]; ++cardCount; }
+        }
+        card_t ckdata[jh.cksize_for_this(cardCount)];
+        jh.search(&callback, ckdata);
+    }
+    auto end = chrono::system_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+    auto ops = double(BENCH_COUNT) / double(duration.count()) / chrono::microseconds::period::num * chrono::microseconds::period::den;
+    cout.imbue(std::locale("en_US.UTF8"));
+    cout << size_t(ops) << endl;
+    getchar();
+    return 0;
+}
 
 int main (int argc, char *argv[])
 {
