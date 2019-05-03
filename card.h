@@ -82,18 +82,18 @@ class JHSearch
 public:
     typedef std::function<bool(const JHSearch&)> callback_t;
     card_vector_t vec;
+    card_size_t gui;
     card_t jiang1;
     card_t jiang2;
-    card_size_t gui;
     card_size_t cksize;
     card_t     *ckend;
     callback_t *callback;
 
     JHSearch(card_size_t _gui = 0, card_t _jiang = NOCARD)
-    : vec(), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), ckend(nullptr), callback(nullptr) {}
+    : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), ckend(nullptr), callback(nullptr) {}
 
     JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
-    : vec(_vec), jiang1(_jiang), jiang2(_jiang), gui(_gui), cksize(0), ckend(nullptr), callback(nullptr) {}
+    : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), ckend(nullptr), callback(nullptr) {}
 
     void ckpipe(std::ostream& os) const;
     void vecpipe(std::ostream& os) const;
