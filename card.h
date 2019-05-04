@@ -114,6 +114,13 @@ public:
     bool search(callback_t *_callback);
     bool search(callback_t *_callback, card_t *_ckend);
 
+protected:
+    bool search_zi_getjiang ();
+    bool search_zi_nojiang ();
+    bool search_shun (card_index_t i);
+    bool search_kezi (card_index_t i);
+    bool search_summary ();
+    
     inline void ckpush_shun_fine(const card_t c) {
         ckend[0] = c;
         ckend[1] = card_next(c);
@@ -220,13 +227,6 @@ public:
             ckend[-2] = card_gui(ckend[-2]);
         }
     }
-
-protected:
-    bool search_zi_getjiang ();
-    bool search_zi_nojiang ();
-    bool search_shun (card_index_t i);
-    bool search_kezi (card_index_t i);
-    bool search_summary ();
 };
 
 
