@@ -99,16 +99,16 @@ public:
     void vecpipe(std::ostream& os) const;
 
     card_size_t cksize_for_vec () const {
-        return std::accumulate(vec.begin(), vec.end(), card_size_t(0));
+        return sizeof(card_t) * std::accumulate(vec.begin(), vec.end(), card_size_t(0));
     }
     card_size_t cksize_for_gui () const {
-        return gui < vec.size() ? gui * 2 : static_cast<card_size_t>(vec.size() * 2);
+        return sizeof(card_t) * (gui < vec.size() ? gui * 2 : static_cast<card_size_t>(vec.size() * 2));
     }
     card_size_t cksize_for_this () const {
         return cksize_for_vec() + cksize_for_gui();
     }
     card_size_t cksize_for_this (const card_size_t vecsum) const {
-        return vecsum + cksize_for_gui();
+        return sizeof(card_t) * vecsum + cksize_for_gui();
     }
 
     bool search(callback_t *_callback);
@@ -169,7 +169,7 @@ public:
         vec[i + 2] -= 1;
         ckpush_shun_fine(c);
     }
-    inline void shun_use_fix(const card_t c, const card_index_t i, const uint8_t j) {
+    inline void shun_use_fix(const card_t c, const card_index_t i, const unsigned j) {
         if (j & 1) {
             vec[i + 0] -= 1;
             vec[i + 1] -= 1;
@@ -202,14 +202,14 @@ public:
         vec[i + 1] += 2;
         vec[i + 2] += 2;
     }
-    inline void shun_drop_fix(const card_index_t i, const uint8_t j) {
+    inline void shun_drop_fix(const card_index_t i, const unsigned j) {
         ckend -= 3;
         cksize -= 3;
         vec[i + 0] += 1;
         vec[i + j] += 1;
         gui += 1;
     }
-    inline void shun_turn_fix(const card_index_t i, const uint8_t j) {
+    inline void shun_turn_fix(const card_index_t i, const unsigned j) {
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;
