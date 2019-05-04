@@ -169,7 +169,7 @@ public:
         vec[i + 2] -= 1;
         ckpush_shun_fine(c);
     }
-    inline void shun_use_fix(const card_t c, const card_index_t i, const uint8_t j) {
+    inline void shun_use_fix(const card_t c, const card_index_t i, const unsigned j) {
         if (j & 1) {
             vec[i + 0] -= 1;
             vec[i + 1] -= 1;
@@ -202,14 +202,14 @@ public:
         vec[i + 1] += 2;
         vec[i + 2] += 2;
     }
-    inline void shun_drop_fix(const card_index_t i, const uint8_t j) {
+    inline void shun_drop_fix(const card_index_t i, const unsigned j) {
         ckend -= 3;
         cksize -= 3;
         vec[i + 0] += 1;
         vec[i + j] += 1;
         gui += 1;
     }
-    inline void shun_turn_fix(const card_index_t i, const uint8_t j) {
+    inline void shun_turn_fix(const card_index_t i, const unsigned j) {
         if (j & 1) {
             vec[i + 2] += 1;
             gui -= 1;

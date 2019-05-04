@@ -170,7 +170,7 @@ bool JHSearch::search_shun (card_index_t i)
     card_count_t fine = vec[i];
     if (fine > vec[i + 1]) fine = vec[i + 1];
     if (fine > vec[i + 2]) fine = vec[i + 2];
-    uint8_t j = vec[i] > fine && gui > 0
+    unsigned j = vec[i] > fine && gui > 0
         ? vec[i + 1] > fine ? 1
         : vec[i + 2] > fine ? 2 : 0 : 0;
     card_t c = itoc(i);
