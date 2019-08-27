@@ -19,7 +19,7 @@ void JHSearch::vecpipe(std::ostream& os) const
     os << ']';
 }
 
-bool JHSearch::search (callback_t *_callback)
+bool JHSearch::search (callback_t *_callback) noexcept
 {
     if (!callback && ckend) {
         callback = _callback;
@@ -32,7 +32,7 @@ bool JHSearch::search (callback_t *_callback)
     }
 }
 
-bool JHSearch::search (callback_t *_callback, card_t *_ckend)
+bool JHSearch::search (callback_t *_callback, card_t *_ckend) noexcept
 {
     if (!callback) {
         callback = _callback;
@@ -48,7 +48,7 @@ bool JHSearch::search (callback_t *_callback, card_t *_ckend)
     }
 }
 
-bool JHSearch::search_zi_nojiang()
+bool JHSearch::search_zi_nojiang() noexcept
 {
     card_size_t __gui = gui;
     card_size_t __cksize = cksize;
@@ -85,7 +85,7 @@ bool JHSearch::search_zi_nojiang()
     return ok;
 }
 
-bool JHSearch::search_zi_getjiang()
+bool JHSearch::search_zi_getjiang() noexcept
 {
     card_size_t __gui = gui;
     card_size_t __cksize = cksize;
@@ -148,7 +148,7 @@ bool JHSearch::search_zi_getjiang()
     return ok;
 }
 
-bool JHSearch::search_shun (card_index_t i)
+bool JHSearch::search_shun (card_index_t i) noexcept
 {
     for (;;) {
         if (1 << i & 0x1fcfe7f) {
@@ -214,7 +214,7 @@ bool JHSearch::search_shun (card_index_t i)
     return false;
 }
 
-bool JHSearch::search_kezi (card_index_t i)
+bool JHSearch::search_kezi (card_index_t i) noexcept
 {
     if (vec[i] < 1) for (++i;;) {
         if (i > 26) return search_summary();
@@ -288,7 +288,7 @@ bool JHSearch::search_kezi (card_index_t i)
 }
 
 
-bool JHSearch::search_summary ()
+bool JHSearch::search_summary () noexcept
 {
     if (jiang1 != NOCARD) {
         return (*callback)(*this);
