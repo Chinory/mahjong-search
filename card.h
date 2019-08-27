@@ -80,7 +80,7 @@ constexpr card_t itoc (const uintmax_t index)
 class JHSearch
 {
 public:
-    typedef std::function<bool(const JHSearch&)> callback_t;
+    typedef std::function<bool(const JHSearch&) noexcept> callback_t;
     card_vector_t vec;
     card_size_t gui;
     card_t jiang1;
@@ -89,37 +89,37 @@ public:
     card_t     *ckend;
     callback_t *callback;
 
-    JHSearch(card_size_t _gui = 0, card_t _jiang = NOCARD)
+    JHSearch(card_size_t _gui = 0, card_t _jiang = NOCARD) noexcept
     : vec(), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), ckend(nullptr), callback(nullptr) {}
 
-    JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD)
+    JHSearch(const card_vector_t& _vec, card_size_t _gui = 0, card_t _jiang = NOCARD) noexcept
     : vec(_vec), gui(_gui), jiang1(_jiang), jiang2(_jiang), cksize(0), ckend(nullptr), callback(nullptr) {}
 
     void ckpipe(std::ostream& os) const;
     void vecpipe(std::ostream& os) const;
 
-    card_size_t cksize_for_vec () const {
+    card_size_t cksize_for_vec () const noexcept {
         return sizeof(card_t) * std::accumulate(vec.begin(), vec.end(), card_size_t(0));
     }
-    card_size_t cksize_for_gui () const {
+    card_size_t cksize_for_gui () const noexcept {
         return sizeof(card_t) * (gui < vec.size() ? gui * 2 : static_cast<card_size_t>(vec.size() * 2));
     }
-    card_size_t cksize_for_this () const {
+    card_size_t cksize_for_this () const noexcept {
         return cksize_for_vec() + cksize_for_gui();
     }
-    card_size_t cksize_for_this (const card_size_t vecsum) const {
+    card_size_t cksize_for_this (const card_size_t vecsum) const noexcept {
         return sizeof(card_t) * vecsum + cksize_for_gui();
     }
 
-    bool search(callback_t *_callback);
-    bool search(callback_t *_callback, card_t *_ckend);
+    bool search(callback_t *_callback) noexcept;
+    bool search(callback_t *_callback, card_t *_ckend) noexcept;
 
 protected:
-    bool search_zi_getjiang ();
-    bool search_zi_nojiang ();
-    bool search_shun (card_index_t i);
-    bool search_kezi (card_index_t i);
-    bool search_summary ();
+    bool search_zi_getjiang () noexcept;
+    bool search_zi_nojiang () noexcept;
+    bool search_shun (card_index_t i) noexcept;
+    bool search_kezi (card_index_t i) noexcept;
+    bool search_summary () noexcept;
     
     inline void ckpush_shun_fine(const card_t c) {
         ckend[0] = c;
