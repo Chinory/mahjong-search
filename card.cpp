@@ -194,10 +194,15 @@ bool JHSearch::search_shun (card_index_t i)
                 shun_drop_fix(i, j);
                 return true;
             }
+            shun_use_fine(c, i);
+            if (search_kezi(i)) {
+                shun_drop_fix(i, j);
+                shun_drop_fine(i);
+                return true;
+            }
             shun_drop_fix(i, j);
-        } else {
-            shun_drop_fine(i);
         }
+        shun_drop_fine(i);
     } else if (j) {
         shun_use_fix(c, i, j);
         if (search_kezi(i)) {
